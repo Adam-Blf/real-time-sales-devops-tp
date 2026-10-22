@@ -48,7 +48,7 @@ a(("table", ["Élément", "Emplacement"],
 # ------------------------------------------------------------------ architecture
 a(("h1", "Architecture de la plateforme"))
 a(("p", "Toute l'infrastructure démarre avec une seule commande, docker compose up, y compris "
-        "Jenkins et SonarQube. Le schéma suivant résume le flux de données et la chaîne de "
+        "Jenkins et SonarQube. La figure 1 résume le flux de données et la chaîne de "
         "contrôle qui l'entoure."))
 a(("figure", str(FIG / "schema-pipeline.png"), "Figure. Flux de données et chaîne de contrôle"))
 a(("p", "Avant d'écrire le moindre test, j'ai découpé l'API, qui tenait en un seul fichier. Les "
@@ -85,7 +85,7 @@ a(("p", "Les adresses des services viennent de variables d'environnement. Les m�
 
 a(("h2", "Tests unitaires"))
 a(("p", "Les cas listés par le sujet sont tous couverts, la plupart avec des tests paramétrés "
-        "qui balayent les bornes. Le tableau ci-dessous fait la correspondance."))
+        "qui balayent les bornes. Le tableau 3 fait la correspondance."))
 a(("table", ["Cas demandé", "Ce que vérifient les tests"],
    [["Montant total", "cinq calculs dont 3 x 100 = 300 et 3 x 0,1 = 0,3, arrondi au centime"],
     ["Quantité", "1 et 1000 acceptés, 0, -1, -50, 1001 et une chaîne refusés"],

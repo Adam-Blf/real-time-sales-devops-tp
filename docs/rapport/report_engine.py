@@ -29,6 +29,7 @@ RULE = (214, 221, 232)
 WHITE = (255, 255, 255)
 
 MARGIN = 18
+MIN_FIGURE_RATIO = 0.62   # reduction maximale acceptee pour eviter un blanc en bas de page
 ASSETS = Path(__file__).parent / "assets"
 
 
@@ -543,7 +544,13 @@ class EfreiReport(FPDF):
             h = max_h
             w = h * iw / ih
         if self.get_y() + h + 11 > self.h - 21:
-            self.add_page()
+            # Plutot que d'envoyer la figure page suivante en laissant un grand blanc, on la
+            # reduit a la place restante, ratio conserve, tant qu'elle garde 62 % de sa taille.
+            room = self.h - 21 - 11 - self.get_y()
+            if room >= max(MIN_FIGURE_RATIO * h, 40):
+                w, h = w * room / h, room
+            else:
+                self.add_page()
         x = MARGIN + (avail - w) / 2
         y = self.get_y()
         self.set_draw_color(*RULE)
@@ -637,6 +644,18 @@ class EfreiReport(FPDF):
         self.set_y(y0 + 23)
 
 
+def _figure_min_height(pdf, path):
+    """Hauteur minimale d'une figure une fois reduite au maximum, legende comprise."""
+    path = Path(path)
+    if not path.exists():
+        return 0
+    from PIL import Image
+    with Image.open(path) as im:
+        iw, ih = im.size
+    h = min((pdf.w - 2 * MARGIN) * ih / iw, 104)
+    return max(MIN_FIGURE_RATIO * h, 40) + 11
+
+
 def build(spec, out_path, n_toc=None, _essais=None):
     """Construit un rapport a partir d'une specification declarative.
 
@@ -661,8 +680,24 @@ def build(spec, out_path, n_toc=None, _essais=None):
     pdf.start_toc(n_toc)
 
     content = spec["content"]
+    floated = set()
     for idx, item in enumerate(content):
+        if idx in floated:
+            continue
         kind = item[0]
+
+        # Flottement : une figure qui ne tient pas, meme reduite, laisserait un grand blanc.
+        # Le bloc de texte ou le tableau qui la suit remonte combler la place, puis la figure.
+        if kind == "figure" and idx + 1 < len(content)                 and content[idx + 1][0] in ("p", "table", "callout")                 and pdf.get_y() + _figure_min_height(pdf, item[1]) > pdf.h - 21:
+            nxt = content[idx + 1]
+            if nxt[0] == "p":
+                pdf.p(nxt[1])
+            elif nxt[0] == "table":
+                pdf.table(nxt[1], nxt[2], nxt[3] if len(nxt) > 3 else None,
+                          nxt[4] if len(nxt) > 4 else None)
+            else:
+                pdf.callout(nxt[1], nxt[2], nxt[3] if len(nxt) > 3 else "info")
+            floated.add(idx + 1)
 
         # Couplage titre-figure : un intertitre ne doit jamais rester seul en bas
         # de page pendant que sa figure bascule sur la suivante.
@@ -674,6 +709,7 @@ def build(spec, out_path, n_toc=None, _essais=None):
                     iw, ih = im.size
                 w = pdf.w - 2 * MARGIN
                 h = min(w * ih / iw, 104)
+                h = max(MIN_FIGURE_RATIO * h, 40)      # la figure peut se reduire jusque-la
                 if pdf.get_y() + h + 22 > pdf.h - 21:
                     pdf.add_page()
 
@@ -686,7 +722,7 @@ def build(spec, out_path, n_toc=None, _essais=None):
                 pdf.add_page()
 
         if kind == "h1":
-            if (pdf.h - 20) - pdf.get_y() < 68:
+            if (pdf.h - 20) - pdf.get_y() < 40:   # titre + deux lignes, sinon blanc inutile
                 pdf.add_page()
             else:
                 pdf.ln(10)
