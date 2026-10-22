@@ -223,7 +223,7 @@ Commit message: "Keep the scanner working directory in the workspace so the Qual
 [2026-10-22T13:04:23.454Z] + id -u
 [2026-10-22T13:04:23.454Z] + id -g
 [2026-10-22T13:04:23.454Z] + git rev-parse HEAD
-[2026-10-22T13:04:23.455Z] + docker run --rm --network real-time-sales-devops-tp_data-platform --volumes-from 5a1ec5b167b1 -w /var/jenkins_home/workspace/real-time-sales-pipeline -u 0:0 -e SONAR_TOKEN -e SONAR_HOST_URL sonarsource/sonar-scanner-cli:11 -Dsonar.projectBaseDir=/var/jenkins_home/workspace/real-time-sales-pipeline -Dsonar.working.directory=/var/jenkins_home/workspace/real-time-sales-pipeline/.scannerwork -Dsonar.scm.revision=fa2a1761c50514d6ec4210df65fcddc85937805b
+[2026-10-22T13:04:23.455Z] + docker run --rm --network real-time-sales-devops-tp_data-platform --volumes-from 5a1ec5b167b1 -w /var/jenkins_home/workspace/real-time-sales-pipeline -u 0:0 -e SONAR_TOKEN -e SONAR_HOST_URL sonarsource/sonar-scanner-cli:11 -Dsonar.projectBaseDir=/var/jenkins_home/workspace/real-time-sales-pipeline -Dsonar.working.directory=/var/jenkins_home/workspace/real-time-sales-pipeline/.scannerwork -Dsonar.scm.revision=fa2a176
 [2026-10-22T13:04:24.367Z] 13:04:24.176 WARN  Property 'sonar.working.directory' with value '/tmp/.scannerwork' is overridden with value '/var/jenkins_home/workspace/real-time-sales-pipeline/.scannerwork'
 [2026-10-22T13:04:24.367Z] 13:04:24.189 INFO  Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
 [2026-10-22T13:04:24.367Z] 13:04:24.191 INFO  Project root configuration file: /var/jenkins_home/workspace/real-time-sales-pipeline/sonar-project.properties

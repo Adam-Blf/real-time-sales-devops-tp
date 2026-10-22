@@ -223,7 +223,7 @@ Commit message: "Secure Jenkins with a local admin and load CasC outside the hom
 [2026-10-22T13:02:33.130Z] + id -u
 [2026-10-22T13:02:33.130Z] + id -g
 [2026-10-22T13:02:33.130Z] + git rev-parse HEAD
-[2026-10-22T13:02:33.130Z] + docker run --rm --network real-time-sales-devops-tp_data-platform --volumes-from 5a1ec5b167b1 -w /var/jenkins_home/workspace/real-time-sales-pipeline -u 0:0 -e SONAR_TOKEN -e SONAR_HOST_URL sonarsource/sonar-scanner-cli:11 -Dsonar.projectBaseDir=/var/jenkins_home/workspace/real-time-sales-pipeline -Dsonar.scm.revision=92766b9b270c97e87a349fd03371e627feb12dad
+[2026-10-22T13:02:33.130Z] + docker run --rm --network real-time-sales-devops-tp_data-platform --volumes-from 5a1ec5b167b1 -w /var/jenkins_home/workspace/real-time-sales-pipeline -u 0:0 -e SONAR_TOKEN -e SONAR_HOST_URL sonarsource/sonar-scanner-cli:11 -Dsonar.projectBaseDir=/var/jenkins_home/workspace/real-time-sales-pipeline -Dsonar.scm.revision=92766b9
 [2026-10-22T13:02:34.043Z] 13:02:33.935 INFO  Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
 [2026-10-22T13:02:34.043Z] 13:02:33.940 INFO  Project root configuration file: /var/jenkins_home/workspace/real-time-sales-pipeline/sonar-project.properties
 [2026-10-22T13:02:34.043Z] 13:02:33.963 INFO  SonarScanner CLI 7.3.0.5189
