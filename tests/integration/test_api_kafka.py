@@ -1,4 +1,4 @@
-"""Test A: an order posted to the running API ends up as an event in the Kafka topic."""
+"""Test A : une commande envoyée à l'API démarrée devient un événement dans le topic Kafka."""
 
 import httpx
 import pytest

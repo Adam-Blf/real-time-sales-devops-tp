@@ -2,7 +2,7 @@ import pytest
 
 
 def pytest_collection_modifyitems(config, items):
-    """Tag each test with its level from its folder, so `-m unit|integration|e2e` works."""
+    """Marque chaque test avec son niveau d'après son dossier, pour que `-m unit|integration|e2e` fonctionne."""
     for item in items:
         for level in ("unit", "integration", "e2e"):
             if f"tests/{level}/" in item.nodeid:

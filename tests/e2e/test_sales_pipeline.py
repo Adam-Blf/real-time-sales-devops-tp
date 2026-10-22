@@ -1,4 +1,4 @@
-"""End-to-end scenario: API -> Kafka -> PySpark -> PostgreSQL."""
+"""Scénario de bout en bout : API -> Kafka -> PySpark -> PostgreSQL."""
 
 from decimal import Decimal
 
@@ -14,7 +14,7 @@ ORDER = {"customer_id": "C100", "product_id": "P001", "quantity": 3, "unit_price
 
 @pytest.fixture(scope="module")
 def platform_ready():
-    """Given the infrastructure is started."""
+    """Étant donné que l'infrastructure est démarrée."""
     wait_for(
         lambda: httpx.get(f"{settings.API_URL}/api/health", timeout=5).status_code == 200,
         timeout=60,
@@ -23,13 +23,13 @@ def platform_ready():
 
 
 def test_order_flows_from_api_to_postgres(platform_ready):
-    # When an order is sent to the API
+    # Quand une commande est envoyée à l'API
     response = httpx.post(f"{settings.API_URL}/api/orders", json=ORDER, timeout=15)
     assert response.status_code == 201
     event = response.json()
     assert event["total_amount"] == 300
 
-    # Then it is published, consumed, processed and stored with the expected values
+    # Alors elle est publiée, consommée, traitée et enregistrée avec les valeurs attendues
     row = wait_for(
         lambda: fetch_processed_order(event["order_id"]),
         timeout=settings.PIPELINE_TIMEOUT_SECONDS,

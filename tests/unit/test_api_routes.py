@@ -1,4 +1,4 @@
-"""API behaviour with Kafka replaced by an in-memory fake: no external service involved."""
+"""Comportement de l'API avec Kafka remplacé par un faux en mémoire : aucun service externe."""
 
 import pytest
 from fastapi.testclient import TestClient

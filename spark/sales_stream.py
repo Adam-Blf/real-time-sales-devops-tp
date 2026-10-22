@@ -21,7 +21,7 @@ CHECKPOINT_LOCATION = os.getenv("CHECKPOINT_LOCATION", "/opt/spark-checkpoints/s
 COLUMNS = ("order_id", "customer_id", "product_id", "quantity",
            "unit_price", "total_amount", "event_timestamp")
 
-# Idempotent insert: a replayed micro-batch (restart, lost checkpoint) must not fail on the primary key.
+# Insertion idempotente : un micro-batch rejoué (redémarrage, checkpoint perdu) ne doit pas échouer sur la clé primaire.
 INSERT_SQL = (
     f"INSERT INTO processed_orders ({', '.join(COLUMNS)}) VALUES %s "
     "ON CONFLICT (order_id) DO NOTHING"
@@ -39,7 +39,7 @@ schema = StructType([
 
 
 def insert_rows(rows, chunk_size=500):
-    """Runs on the driver, which is the only process with psycopg2 installed."""
+    """S'exécute sur le driver, seul processus où psycopg2 est installé."""
     connection = psycopg2.connect(
         host=POSTGRES_HOST, port=POSTGRES_PORT, dbname=POSTGRES_DB,
         user=POSTGRES_USER, password=POSTGRES_PASSWORD,
@@ -60,7 +60,7 @@ def insert_rows(rows, chunk_size=500):
 
 def write_to_postgres(batch_df, batch_id):
     output = batch_df.select(*COLUMNS[:-1], col("timestamp").alias("event_timestamp"))
-    # toLocalIterator streams one partition at a time to the driver instead of collecting everything.
+    # toLocalIterator rapatrie une partition à la fois vers le driver au lieu de tout collecter.
     insert_rows(output.toLocalIterator())
 
 

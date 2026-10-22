@@ -1,4 +1,4 @@
-"""Business rules of the sales platform, free of any Kafka/Spark/PostgreSQL dependency."""
+"""Règles métier de la plateforme de ventes, sans aucune dépendance à Kafka, Spark ou PostgreSQL."""
 
 import uuid
 from datetime import datetime, timezone

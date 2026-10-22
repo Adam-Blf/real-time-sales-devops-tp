@@ -1,0 +1,38 @@
+jenkins:
+  systemMessage: "Real-Time Sales pipeline - local CI (configured as code)"
+  numExecutors: 2
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - string:
+              scope: GLOBAL
+              id: sonar-token
+              description: SonarQube analysis token
+              secret: "${SONAR_TOKEN:-not-configured}"
+
+jobs:
+  - script: >
+      pipelineJob('real-time-sales-pipeline') {
+        description('Checkout, tests, build, E2E, SonarQube and Quality Gate')
+        properties {
+          pipelineTriggers {
+            triggers {
+              pollSCM { scmpoll_spec('H/2 * * * *') }
+            }
+          }
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote { url('${PIPELINE_REPO_URL}') }
+                branch('*/${PIPELINE_BRANCH}')
+              }
+            }
+            scriptPath('Jenkinsfile')
+            lightweight(true)
+          }
+        }
+      }

@@ -53,6 +53,8 @@ services:
     container_name: sales-kafka
     depends_on:
       - zookeeper
+    # Après un arrêt brutal, ZooKeeper garde ~20 s le nœud du broker : Kafka sort en NodeExists, puis repart.
+    restart: on-failure
     ports:
       - "9092:9092"
     environment:
@@ -83,8 +85,8 @@ services:
     networks:
       - data-platform
 
-  # One-shot job: the topic must exist before Spark subscribes, otherwise the stream dies with
-  # UnknownTopicOrPartitionException on a fresh start.
+  # Tâche ponctuelle : le topic doit exister avant l'abonnement de Spark, sinon le stream meurt
+  # sur UnknownTopicOrPartitionException au premier démarrage.
   kafka-init:
     image: confluentinc/cp-kafka:7.6.14
     container_name: sales-kafka-init
@@ -174,8 +176,14 @@ services:
     volumes:
       - jenkins-data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
+    # SONAR_TOKEN vient de .env (généré par tools/sonar_setup.py, jamais commité).
+    env_file:
+      - path: .env
+        required: false
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+      PIPELINE_REPO_URL: ${PIPELINE_REPO_URL:-https://github.com/Adam-Blf/real-time-sales-devops-tp.git}
+      PIPELINE_BRANCH: ${PIPELINE_BRANCH:-dev}
     networks:
       - data-platform
 

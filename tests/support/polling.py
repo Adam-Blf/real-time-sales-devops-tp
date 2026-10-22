@@ -1,4 +1,4 @@
-"""Wait for a condition with a deadline instead of a fixed sleep."""
+"""Attente d'une condition avec délai maximal, au lieu d'un sleep fixe."""
 
 import time
 
@@ -8,7 +8,7 @@ class PollingTimeout(AssertionError):
 
 
 def wait_for(probe, timeout: float, interval: float = 1.0, description: str = "condition"):
-    """Call probe() until it returns a truthy value, or fail once the timeout expires."""
+    """Appelle probe() jusqu'à obtenir une valeur vraie, ou échoue une fois le délai dépassé."""
     deadline = time.monotonic() + timeout
     last_error = None
     while True:
@@ -16,7 +16,7 @@ def wait_for(probe, timeout: float, interval: float = 1.0, description: str = "c
             result = probe()
             if result:
                 return result
-        except Exception as error:  # the service may not be ready yet, keep polling
+        except Exception as error:  # le service n'est peut-être pas encore prêt, on continue
             last_error = error
         if time.monotonic() >= deadline:
             detail = f" (last error: {last_error!r})" if last_error else ""

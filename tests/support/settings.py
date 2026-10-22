@@ -1,4 +1,4 @@
-"""Endpoints of the running platform, overridable so the same tests run on the host and inside Jenkins."""
+"""Points d'accès de la plateforme démarrée, surchargeables pour que les mêmes tests tournent sur le poste et dans Jenkins."""
 
 import os
 

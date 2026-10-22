@@ -1,4 +1,4 @@
-"""Test B: an event written straight into Kafka is processed by Spark and stored in PostgreSQL."""
+"""Test B : un événement écrit directement dans Kafka est traité par Spark puis stocké dans PostgreSQL."""
 
 import uuid
 from datetime import datetime, timezone
@@ -53,7 +53,7 @@ def test_event_is_processed_into_processed_orders():
 def test_invalid_event_is_filtered_out_by_spark():
     invalid = make_event(quantity=0, total_amount=0)
     marker = make_event()
-    # Same partition, so once the marker is stored Spark has already handled the invalid event.
+    # Même partition : une fois le marqueur stocké, Spark a forcément déjà traité l'événement invalide.
     publish(invalid, marker)
 
     wait_for(

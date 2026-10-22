@@ -19,7 +19,7 @@ def make_order(**overrides) -> Order:
     return Order(**fields)
 
 
-# Total amount
+# Montant total
 
 @pytest.mark.parametrize(
     "quantity, unit_price, expected",
@@ -33,7 +33,7 @@ def test_total_amount_is_rounded_to_cents():
     assert compute_total_amount(3, 33.333) == 100.0
 
 
-# Quantity
+# Quantité
 
 def test_positive_quantity_is_accepted():
     assert make_order(quantity=1).quantity == 1
@@ -54,7 +54,7 @@ def test_non_numeric_quantity_is_rejected():
         make_order(quantity="two")
 
 
-# Unit price
+# Prix unitaire
 
 @pytest.mark.parametrize("unit_price", [0.01, 49.90, 100000])
 def test_positive_price_is_accepted(unit_price):
@@ -67,7 +67,7 @@ def test_invalid_price_is_rejected(unit_price):
         make_order(unit_price=unit_price)
 
 
-# Customer and product identifiers
+# Identifiants client et produit
 
 @pytest.mark.parametrize("field", ["customer_id", "product_id"])
 @pytest.mark.parametrize("value", ["", "C"])
@@ -89,7 +89,7 @@ def test_product_catalog_lookup(product_id, known):
     assert is_known_product(product_id) is known
 
 
-# Order identifier
+# Identifiant de commande
 
 def test_order_id_format():
     assert re.fullmatch(r"ORD-[0-9A-F]{10}", generate_order_id())
@@ -99,7 +99,7 @@ def test_order_ids_are_unique():
     assert len({generate_order_id() for _ in range(1000)}) == 1000
 
 
-# Event construction
+# Construction de l'événement
 
 def test_event_contains_every_expected_field():
     event = build_order_event(make_order())

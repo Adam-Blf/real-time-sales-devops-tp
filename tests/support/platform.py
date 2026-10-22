@@ -1,4 +1,4 @@
-"""Clients used by integration and E2E tests to talk to the real Docker services."""
+"""Clients utilisés par les tests d'intégration et E2E pour parler aux vrais services Docker."""
 
 import json
 import uuid

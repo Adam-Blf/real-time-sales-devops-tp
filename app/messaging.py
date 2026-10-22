@@ -1,4 +1,4 @@
-"""Kafka publication of order events."""
+"""Publication des événements de commande dans Kafka."""
 
 import json
 import os
@@ -23,7 +23,7 @@ def create_kafka_producer() -> KafkaProducer:
 
 
 def get_producer() -> KafkaProducer:
-    """Return a single producer shared by every request instead of one per order."""
+    """Renvoie un producteur unique partagé par toutes les requêtes, au lieu d'un par commande."""
     global _producer
     if _producer is None:
         with _producer_lock:
