@@ -16,8 +16,9 @@ RUN apt-get update \
 COPY docker/jenkins/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-COPY docker/jenkins/casc.yaml /var/jenkins_home/casc_configs/casc.yaml
-ENV CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs/casc.yaml
+# Hors de /var/jenkins_home : ce dossier est un volume, qui masquerait le fichier de l image.
+COPY docker/jenkins/casc.yaml /opt/jenkins-casc/casc.yaml
+ENV CASC_JENKINS_CONFIG=/opt/jenkins-casc/casc.yaml
 
 RUN python3 --version && docker --version && docker compose version
 

@@ -1,6 +1,16 @@
 jenkins:
   systemMessage: "Real-Time Sales pipeline - local CI (configured as code)"
   numExecutors: 2
+  # Compte local unique ; le mot de passe vient de .env (JENKINS_ADMIN_PASSWORD), jamais du dépôt.
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
 
 credentials:
   system:
