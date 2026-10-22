@@ -1,3 +1,5 @@
+name: real-time-sales-devops-tp
+
 services:
 
   sales-api:
@@ -11,8 +13,9 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      kafka:
-        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+    restart: on-failure
     networks:
       - data-platform
 
@@ -22,7 +25,7 @@ services:
     environment:
       POSTGRES_DB: sales
       POSTGRES_USER: sales
-      POSTGRES_PASSWORD: sales
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sales}
     ports:
       - "5432:5432"
     volumes:
@@ -80,6 +83,21 @@ services:
     networks:
       - data-platform
 
+  # One-shot job: the topic must exist before Spark subscribes, otherwise the stream dies with
+  # UnknownTopicOrPartitionException on a fresh start.
+  kafka-init:
+    image: confluentinc/cp-kafka:7.6.14
+    container_name: sales-kafka-init
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: >
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists
+      --topic sales.orders --partitions 1 --replication-factor 1
+    restart: "no"
+    networks:
+      - data-platform
+
   spark-master:
     image: apache/spark:3.5.7
     container_name: sales-spark-master
@@ -115,12 +133,13 @@ services:
       dockerfile: docker/spark/Dockerfile
     container_name: sales-spark-streaming
     depends_on:
-      kafka:
-        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
       postgres:
         condition: service_healthy
       spark-master:
         condition: service_started
+    restart: on-failure
 
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
@@ -128,13 +147,16 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_DB: sales
       POSTGRES_USER: sales
-      POSTGRES_PASSWORD: sales
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sales}
 
     command: >
       /opt/spark/bin/spark-submit
       --master spark://spark-master:7077
       --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.7,org.postgresql:postgresql:42.7.3
       /opt/spark-app/sales_stream.py
+
+    volumes:
+      - spark-checkpoints:/opt/spark-checkpoints
 
     networks:
       - data-platform
@@ -189,6 +211,7 @@ services:
 
 volumes:
   postgres-data:
+  spark-checkpoints:
   jenkins-data:
   sonarqube-db-data:
   sonarqube-data:
