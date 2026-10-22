@@ -77,6 +77,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     // Le scanner tourne dans un conteneur frère : --volumes-from partage le workspace Jenkins.
+                    // L'image écrit par défaut dans /tmp/.scannerwork, perdu avec --rm : le Quality Gate a besoin du report-task.txt.
                     sh '''
                         docker run --rm \
                           --network "$DOCKER_NETWORK" \
@@ -87,6 +88,7 @@ pipeline {
                           -e SONAR_HOST_URL \
                           "$SCANNER_IMAGE" \
                           -Dsonar.projectBaseDir="$WORKSPACE" \
+                          -Dsonar.working.directory="$WORKSPACE/.scannerwork" \
                           -Dsonar.scm.revision="$(git rev-parse HEAD)"
                     '''
                 }
