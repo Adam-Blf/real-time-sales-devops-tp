@@ -65,6 +65,19 @@ def sonar(page, password):
         shot(page, name, 700)
 
 
+def swagger(page):
+    page.goto("http://localhost:8000/docs")
+    page.wait_for_selector(".opblock", timeout=15000)
+    shot(page, "swagger.png", 410)
+
+
+def sonar_issue(page):
+    page.goto(f"{SONAR}/project/issues?id=real-time-sales-devops-baseline&resolved=false")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(2500)
+    shot(page, "sonar-vulnerabilite.png", 520)
+
+
 def main():
     env = read_env()
     OUT.mkdir(parents=True, exist_ok=True)
@@ -73,6 +86,8 @@ def main():
         page = browser.new_page(viewport={"width": 1440, "height": 900}, device_scale_factor=1.5)
         jenkins(page, env["JENKINS_ADMIN_PASSWORD"])
         sonar(page, env["SONAR_ADMIN_PASSWORD"])
+        sonar_issue(page)
+        swagger(page)
         browser.close()
 
 

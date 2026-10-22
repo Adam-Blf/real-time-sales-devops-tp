@@ -50,20 +50,7 @@ a(("h1", "Architecture de la plateforme"))
 a(("p", "Toute l'infrastructure démarre avec une seule commande, docker compose up, y compris "
         "Jenkins et SonarQube. Le schéma suivant résume le flux de données et la chaîne de "
         "contrôle qui l'entoure."))
-a(("code", "client HTTP\n"
-           "   |  POST /api/orders\n"
-           "   v\n"
-           "Sales API (FastAPI) --événement JSON--> Kafka, topic sales.orders\n"
-           "                                            |\n"
-           "                                            v\n"
-           "                         PySpark Structured Streaming (filtre)\n"
-           "                                            |\n"
-           "                                            v\n"
-           "                         PostgreSQL, table processed_orders\n"
-           "\n"
-           "Git (branche dev) -> Jenkins -> tests unitaires, intégration, E2E\n"
-           "                            -> SonarQube -> Quality Gate -> OK ou STOP",
-   "Figure 1. Flux de données et chaîne de contrôle"))
+a(("figure", str(FIG / "schema-pipeline.png"), "Figure. Flux de données et chaîne de contrôle"))
 a(("p", "Avant d'écrire le moindre test, j'ai découpé l'API, qui tenait en un seul fichier. Les "
         "règles métier sont passées dans app/domain.py, sans aucune dépendance à Kafka. On y trouve le "
         "modèle Order, le catalogue, le calcul du montant et la construction de l'événement. La "
@@ -71,6 +58,10 @@ a(("p", "Avant d'écrire le moindre test, j'ai découpé l'API, qui tenait en un
         "d'origine en ouvrait un nouveau à chaque requête. Les routes ne font plus que relier les "
         "deux et traduire les erreurs en codes HTTP, 404 pour un produit inconnu, 422 pour une "
         "donnée invalide et 503 quand Kafka ne répond pas."))
+a(("figure", str(FIG / "swagger.png"), "Figure. Les trois routes de l'API, documentation Swagger générée par FastAPI"))
+a(("p", "Une fois la plateforme lancée, les dix conteneurs tournent côte à côte. Kafka et PostgreSQL "
+        "déclarent une sonde de santé, sur laquelle s'appuient les dépendances de démarrage."))
+a(("figure", str(FIG / "term-compose.png"), "Figure. La plateforme démarrée avec Docker Compose"))
 
 # ------------------------------------------------------------------ tests
 a(("h1", "Stratégie de tests"))
@@ -106,6 +97,7 @@ a(("table", ["Cas demandé", "Ce que vérifient les tests"],
    [1.3, 3.4], "Tableau 3. Correspondance entre le sujet et les tests unitaires"))
 a(("p", "La couverture du paquet app atteint 100 %, mesurée par pytest-cov et publiée dans "
         "SonarQube sous forme de fichier coverage.xml."))
+a(("figure", str(FIG / "term-unit.png"), "Figure. Les 50 tests unitaires et la couverture ligne par ligne"))
 
 a(("h2", "Tests d'intégration"))
 a(("p", "Le test A vérifie le couple API et Kafka. Il poste une commande à l'API réellement "
@@ -118,6 +110,8 @@ a(("p", "Le test B écrit directement dans Kafka, sans passer par l'API, et atte
         "partition, et Spark les lit dans l'ordre. Quand le marqueur arrive en base, la commande "
         "invalide a forcément été traitée avant lui, et elle doit être absente. J'obtiens la "
         "preuve du filtrage sans attendre un délai choisi au hasard."))
+a(("figure", str(FIG / "term-integration.png"),
+   "Figure. Les tests d'intégration et E2E, lancés contre la plateforme démarrée"))
 
 a(("h2", "Scénario de bout en bout"))
 a(("p", "Le test E2E reprend la commande du sujet, le client C100 qui achète trois produits P001 "
@@ -126,7 +120,7 @@ a(("p", "Le test E2E reprend la commande du sujet, le client C100 qui achète tr
 a(("code", "Given  l'infrastructure démarrée (GET /api/health renvoie UP)\n"
            "When   POST /api/orders {customer_id: C100, product_id: P001, quantity: 3, unit_price: 100}\n"
            "Then   une ligne apparaît dans processed_orders avec total_amount = 300",
-   "Figure 2. Le scénario E2E"))
+   "Figure. Le scénario E2E"))
 
 # ------------------------------------------------------------------ jenkins
 a(("h1", "Pipeline Jenkins"))
@@ -137,7 +131,7 @@ a(("p", "Je n'ai rien configuré à la main dans l'interface de Jenkins. Son ima
         "minutes. Supprimer le conteneur et le recréer redonne exactement le même Jenkins."))
 a(("code", "Checkout -> Install -> Unit Tests -> Integration Tests -> Build -> Deploy\n"
            "         -> E2E Tests -> SonarQube Analysis -> Quality Gate",
-   "Figure 3. Les étapes du Jenkinsfile"))
+   "Figure. Les étapes du Jenkinsfile"))
 a(("p", "L'étape Build reconstruit les images de l'API et du job Spark, et l'étape Deploy les "
         "redémarre avant l'E2E. Le scénario de bout en bout valide le code du commit en cours, "
         "pas une image construite la veille. L'analyse SonarQube tourne dans un conteneur frère "
@@ -146,7 +140,7 @@ a(("p", "L'étape Build reconstruit les images de l'API et du job Spark, et l'é
         "un code d'erreur si le Gate n'est pas vert. Les rapports JUnit des trois niveaux et le "
         "fichier de couverture sont archivés à chaque build."))
 a(("figure", str(FIG / "jenkins-job.png"),
-   "Figure 4. Historique du job. Les builds #2 et #4 se sont arrêtés, #3 et #5 sont passés"))
+   "Figure. Historique du job. Les builds #2 et #4 se sont arrêtés, #3 et #5 sont passés"))
 a(("p", "L'historique montre deux arrêts qui prouvent que la pipeline bloque vraiment. Le build "
         "#2 avait tous ses tests verts mais s'est arrêté à l'étape Quality Gate, faute de trouver "
         "le rapport du scanner (le correctif est décrit plus loin). Le build #4 s'est lancé tout "
@@ -154,7 +148,10 @@ a(("p", "L'historique montre deux arrêts qui prouvent que la pipeline bloque vr
         "tests d'intégration et n'est jamais allé jusqu'au build des images. Le build #5, lancé "
         "une fois la plateforme redémarrée, est vert sur le dernier commit."))
 a(("figure", str(FIG / "jenkins-tests.png"),
-   "Figure 5. Résultats du build #3, 56 tests répartis sur les trois niveaux"))
+   "Figure. Résultats du build #3, 56 tests répartis sur les trois niveaux"))
+a(("p", "La fin de la console du build #5 montre l'étape Quality Gate. Le script affiche chaque "
+        "condition avec la valeur mesurée, et Jenkins conclut sur un succès."))
+a(("figure", str(FIG / "term-gate.png"), "Figure. Sortie de l'étape Quality Gate dans la console Jenkins"))
 
 # ------------------------------------------------------------------ sonar
 a(("h1", "Analyse SonarQube et Quality Gate"))
@@ -175,13 +172,15 @@ a(("p", "Pour comparer, j'ai analysé le code d'origine de l'enseignant, avec se
         "départ, dans un projet SonarQube séparé et sous le même Gate. Il échoue sur deux "
         "conditions."))
 a(("figure", str(FIG / "sonar-avant.png"),
-   "Figure 6. Code d'origine, Quality Gate en échec"))
+   "Figure. Code d'origine, Quality Gate en échec"))
 a(("p", "La vulnérabilité, classée critique, vient du job Spark. Il écrivait son checkpoint dans "
         "/tmp, un répertoire où tout le monde peut écrire. La couverture de 70,7 % s'explique par "
         "les règles de validation, que les tests de départ ne vérifiaient qu'en partie. Il n'y "
         "avait en revanche ni bug, ni code smell, ni duplication."))
+a(("figure", str(FIG / "sonar-vulnerabilite.png"),
+   "Figure. La vulnérabilité du code d'origine, ligne 79 de spark/sales_stream.py"))
 a(("figure", str(FIG / "sonar-apres.png"),
-   "Figure 7. Code livré, Quality Gate validé"))
+   "Figure. Code livré, Quality Gate validé"))
 a(("table", ["Mesure", "Code d'origine", "Code livré"],
    [["Couverture", "70,7 %", "100 %"], ["Bugs", "0", "0"],
     ["Vulnérabilités", "1 (critique)", "0"], ["Code smells", "0", "0"],
@@ -229,6 +228,7 @@ a(("h1", "Déploiement sur Kubernetes"))
 a(("p", "Le second TP reprend le même projet sur Minikube. Le cluster de mon poste hébergeait "
         "déjà les déploiements d'un autre cours dans le namespace default, et je n'ai pas voulu "
         "y toucher. Toute la plateforme vit dans un namespace dédié, sales."))
+a(("figure", str(FIG / "schema-kubernetes.png"), "Figure. La plateforme déployée dans le cluster"))
 a(("table", ["Fichier", "Ressources"],
    [["00-namespace.yaml", "Namespace sales"],
     ["01-configmap.yaml", "hôtes Kafka et PostgreSQL, topic, base, utilisateur"],
@@ -260,45 +260,22 @@ a(("p", "Spark tourne en mode local[2] dans un seul Deployment, avec la même im
         "Minikube et déclarées avec imagePullPolicy: Never."))
 
 a(("h2", "État du cluster et test du flux"))
-a(("code", "NAME                              READY   UP-TO-DATE   AVAILABLE\n"
-           "deployment.apps/kafka             1/1     1            1\n"
-           "deployment.apps/postgres          1/1     1            1\n"
-           "deployment.apps/sales-api         1/1     1            1\n"
-           "deployment.apps/spark-streaming   1/1     1            1\n"
-           "deployment.apps/zookeeper         1/1     1            1\n"
-           "\n"
-           "NAME                TYPE        PORT(S)\n"
-           "service/kafka       ClusterIP   9092/TCP\n"
-           "service/postgres    ClusterIP   5432/TCP\n"
-           "service/sales-api   ClusterIP   8000/TCP\n"
-           "service/zookeeper   ClusterIP   2181/TCP",
-   "Figure 8. kubectl -n sales get deployments,services"))
-a(("p", "J'ai exposé l'API avec kubectl port-forward service/sales-api 8000:8000, puis envoyé la "
-        "commande du sujet. L'API a renvoyé la commande ORD-34A3DCF77E avec un montant de 300, et "
-        "la ligne est apparue dans PostgreSQL six secondes plus tard. Le flux complet fonctionne "
-        "dans le cluster."))
-a(("code", "$ curl -X POST localhost:8000/api/orders -d '{\"customer_id\":\"C100\",\"product_id\":\"P001\",\n"
-           "       \"quantity\":3,\"unit_price\":100}'\n"
-           "{\"order_id\":\"ORD-34A3DCF77E\",\"total_amount\":300.0, ...}\n"
-           "\n"
-           "$ kubectl -n sales exec deploy/postgres -- psql -U sales -d sales -c \"select ...\"\n"
-           "    order_id    | customer_id | product_id | quantity | total_amount\n"
-           " ORD-34A3DCF77E | C100        | P001       |        3 |       300.00",
-   "Figure 9. Une commande traverse Kafka et Spark jusqu'à PostgreSQL"))
+a(("figure", str(FIG / "term-k8s-state.png"), "Figure. Le nœud Minikube et les ressources du namespace sales"))
+a(("p", "J'ai exposé l'API avec kubectl port-forward, sur le port local 8001 parce que l'API du "
+        "compose occupait déjà le 8000, puis envoyé la commande du sujet. L'API a renvoyé un montant "
+        "de 300, et la ligne est apparue dans PostgreSQL quelques secondes plus tard. Le flux complet "
+        "fonctionne dans le cluster."))
+a(("figure", str(FIG / "term-k8s-flow.png"), "Figure. Une commande traverse Kafka et Spark jusqu'à PostgreSQL"))
 
 a(("h2", "Mise à l'échelle et suppression d'un Pod"))
 a(("p", "Le passage à trois réplicas a créé deux Pods en quelques secondes, et le Deployment est "
         "passé à 3/3. Le Service sales-api répartit alors les requêtes entre les trois. Revenir à "
         "un réplica a supprimé les deux Pods en trop."))
-a(("code", "MODIFIED   sales-api-b5db74958-8lqzt   1/1   Terminating         9m39s\n"
-           "ADDED      sales-api-b5db74958-g4j5d   0/1   Pending             0s\n"
-           "MODIFIED   sales-api-b5db74958-g4j5d   0/1   ContainerCreating   0s\n"
-           "DELETED    sales-api-b5db74958-8lqzt   0/1   Completed           9m40s\n"
-           "MODIFIED   sales-api-b5db74958-g4j5d   1/1   Running             7s",
-   "Figure 10. kubectl get pods -w pendant la suppression d'un Pod"))
+a(("figure", str(FIG / "term-k8s-scale.png"), "Figure. Passage de un à trois réplicas, puis retour à un"))
+a(("figure", str(FIG / "term-k8s-heal.png"), "Figure. Suppression d'un Pod de l'API et création de son remplaçant"))
 a(("p", "Quand j'ai supprimé le Pod de l'API, le ReplicaSet a constaté qu'il restait zéro Pod "
         "pour un souhaité. Il en a créé un nouveau dans la même seconde, avant même que l'ancien "
-        "ait fini de s'arrêter. Le remplaçant est devenu prêt sept secondes plus tard, au moment "
+        "ait fini de s'arrêter. Le remplaçant est devenu prêt six secondes plus tard, au moment "
         "où sa sonde /api/health a répondu. Kubernetes ne relance pas le Pod supprimé, il en crée "
         "un autre, avec un autre nom et une autre adresse IP. C'est pour cette raison qu'on "
         "s'adresse toujours au Service, dont l'adresse ne change pas."))
@@ -313,6 +290,13 @@ a(("p", "Le passage à Kubernetes m'a surtout appris que la configuration d'un c
         "conflit avec les images, et une sonde mal choisie suffit à faire tourner un service en "
         "boucle. La suite logique serait de brancher ce déploiement sur la pipeline Jenkins, "
         "que le sujet laissait hors du périmètre."))
+
+# Numérotation des figures dans l'ordre d'apparition, pour qu'un ajout ne la décale jamais.
+_n = 0
+for _i, _item in enumerate(C):
+    if _item[0] in ("figure", "code") and len(_item) > 2 and _item[2].startswith("Figure. "):
+        _n += 1
+        C[_i] = (_item[0], _item[1], f"Figure {_n}. " + _item[2][len("Figure. "):]) + tuple(_item[3:])
 
 SPEC = {
     "title": TITLE,
