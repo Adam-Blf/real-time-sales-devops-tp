@@ -1,0 +1,20 @@
+NAME                                   READY   STATUS      RESTARTS        AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+pod/kafka-777744c55-8lq6f              1/1     Running     0               56s     10.244.0.16   minikube   <none>           <none>
+pod/kafka-init-hwd92                   0/1     Completed   4 (2m13s ago)   8m30s   10.244.0.13   minikube   <none>           <none>
+pod/postgres-b5dc76d55-lk7g8           1/1     Running     0               8m30s   10.244.0.15   minikube   <none>           <none>
+pod/sales-api-b5db74958-8lqzt          1/1     Running     0               8m31s   10.244.0.10   minikube   <none>           <none>
+pod/spark-streaming-5857d47c88-k48dl   1/1     Running     1 (4m22s ago)   8m30s   10.244.0.14   minikube   <none>           <none>
+pod/zookeeper-7456559dcc-5vnl8         1/1     Running     0               8m30s   10.244.0.11   minikube   <none>           <none>
+
+NAME                              READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                             SELECTOR
+deployment.apps/kafka             1/1     1            1           8m30s   kafka        confluentinc/cp-kafka:7.6.14       app=kafka
+deployment.apps/postgres          1/1     1            1           8m30s   postgres     postgres:16-alpine                 app=postgres
+deployment.apps/sales-api         1/1     1            1           8m31s   api          sales-api:tp3                      app=sales-api
+deployment.apps/spark-streaming   1/1     1            1           8m30s   spark        sales-spark-streaming:tp3          app=spark-streaming
+deployment.apps/zookeeper         1/1     1            1           8m30s   zookeeper    confluentinc/cp-zookeeper:7.6.14   app=zookeeper
+
+NAME                TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+service/kafka       ClusterIP   10.110.182.112   <none>        9092/TCP   8m30s   app=kafka
+service/postgres    ClusterIP   10.104.132.42    <none>        5432/TCP   8m30s   app=postgres
+service/sales-api   ClusterIP   10.104.170.184   <none>        8000/TCP   8m31s   app=sales-api
+service/zookeeper   ClusterIP   10.109.42.168    <none>        2181/TCP   8m30s   app=zookeeper

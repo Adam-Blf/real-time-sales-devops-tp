@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sales-api
+  namespace: sales
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sales-api
+  template:
+    metadata:
+      labels:
+        app: sales-api
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: api
+          # Image construite dans Minikube (minikube image build), jamais tirée d'un registre.
+          image: sales-api:tp3
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: sales-config
+          readinessProbe:
+            httpGet: {path: /api/health, port: 8000}
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /api/health, port: 8000}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests: {cpu: 50m, memory: 96Mi}
+            limits: {memory: 256Mi}

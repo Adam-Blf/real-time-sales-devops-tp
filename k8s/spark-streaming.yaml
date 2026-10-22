@@ -1,0 +1,64 @@
+# Checkpoints Spark sur volume : un redémarrage du Pod reprend aux offsets déjà traités.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: spark-checkpoints
+  namespace: sales
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-streaming
+  namespace: sales
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: spark-streaming
+  template:
+    metadata:
+      labels:
+        app: spark-streaming
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: spark
+          image: sales-spark-streaming:tp3
+          imagePullPolicy: Never
+          # Même job que le compose, en mode local : ce Deployment remplace le couple master/worker.
+          # Si le topic n'existe pas encore, le job s'arrête et Kubernetes relance le conteneur.
+          command:
+            - /opt/spark/bin/spark-submit
+            - --master
+            - local[2]
+            - --conf
+            - spark.jars.ivy=/tmp/.ivy2
+            - --packages
+            - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.7,org.postgresql:postgresql:42.7.3
+            - /opt/spark-app/sales_stream.py
+          envFrom:
+            - configMapRef:
+                name: sales-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: postgres-credentials, key: POSTGRES_PASSWORD}
+            - name: CHECKPOINT_LOCATION
+              value: /opt/spark-checkpoints/sales
+          resources:
+            requests: {cpu: 500m, memory: 1Gi}
+            limits: {memory: 2Gi}
+          volumeMounts:
+            - name: checkpoints
+              mountPath: /opt/spark-checkpoints
+      volumes:
+        - name: checkpoints
+          persistentVolumeClaim:
+            claimName: spark-checkpoints

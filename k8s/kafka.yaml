@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+  namespace: sales
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      # Sans cela, Kubernetes injecte ZOOKEEPER_PORT=tcp://..., que l'image Confluent lit comme un réglage.
+      enableServiceLinks: false
+      containers:
+        - name: zookeeper
+          image: confluentinc/cp-zookeeper:7.6.14
+          ports:
+            - containerPort: 2181
+          env:
+            - name: ZOOKEEPER_CLIENT_PORT
+              value: "2181"
+            - name: ZOOKEEPER_TICK_TIME
+              value: "2000"
+          resources:
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {memory: 512Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: sales
+spec:
+  selector:
+    app: zookeeper
+  ports:
+    - port: 2181
+      targetPort: 2181
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+  namespace: sales
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      # Le Service « kafka » injecterait KAFKA_PORT, que l'image Confluent refuse au démarrage.
+      enableServiceLinks: false
+      containers:
+        - name: kafka
+          image: confluentinc/cp-kafka:7.6.14
+          ports:
+            - containerPort: 9092
+          env:
+            - name: KAFKA_BROKER_ID
+              value: "1"
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: zookeeper:2181
+            # Un seul listener : tous les clients sont dans le cluster et joignent le Service « kafka ».
+            - name: KAFKA_LISTENERS
+              value: PLAINTEXT://0.0.0.0:9092
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: PLAINTEXT://kafka:9092
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+          # Sonde TCP : lancer kafka-topics démarre une JVM, qui dépasse le délai sur un nœud Minikube chargé.
+          readinessProbe:
+            tcpSocket: {port: 9092}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests: {cpu: 200m, memory: 512Mi}
+            limits: {memory: 1Gi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: sales
+spec:
+  selector:
+    app: kafka
+  ports:
+    - port: 9092
+      targetPort: 9092
+---
+# Équivalent du service kafka-init du compose : le topic doit exister avant l'abonnement de Spark.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-init
+  namespace: sales
+spec:
+  backoffLimit: 20
+  template:
+    spec:
+      enableServiceLinks: false
+      restartPolicy: OnFailure
+      containers:
+        - name: create-topic
+          image: confluentinc/cp-kafka:7.6.14
+          command: ["kafka-topics", "--bootstrap-server", "kafka:9092", "--create", "--if-not-exists",
+                    "--topic", "sales.orders", "--partitions", "1", "--replication-factor", "1"]

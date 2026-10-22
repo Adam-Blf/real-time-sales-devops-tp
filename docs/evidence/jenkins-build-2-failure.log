@@ -1,0 +1,384 @@
+Started by user admin
+Obtained Jenkinsfile from git https://github.com/Adam-Blf/real-time-sales-devops-tp.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/real-time-sales-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/real-time-sales-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Adam-Blf/real-time-sales-devops-tp.git # timeout=10
+Fetching upstream changes from https://github.com/Adam-Blf/real-time-sales-devops-tp.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Adam-Blf/real-time-sales-devops-tp.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/dev^{commit} # timeout=10
+Checking out Revision 92766b9b270c97e87a349fd03371e627feb12dad (refs/remotes/origin/dev)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 92766b9b270c97e87a349fd03371e627feb12dad # timeout=10
+Commit message: "Secure Jenkins with a local admin and load CasC outside the home volume"
+ > git rev-list --no-walk 92766b9b270c97e87a349fd03371e627feb12dad # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-10-22T13:02:10.882Z] Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+[2026-10-22T13:02:11.039Z] Selected Git installation does not exist. Using Default
+[2026-10-22T13:02:11.040Z] The recommended git tool is: NONE
+[2026-10-22T13:02:11.040Z] No credentials specified
+[2026-10-22T13:02:11.041Z]  > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/real-time-sales-pipeline/.git # timeout=10
+[2026-10-22T13:02:11.050Z] Fetching changes from the remote Git repository
+[2026-10-22T13:02:11.054Z]  > git config remote.origin.url https://github.com/Adam-Blf/real-time-sales-devops-tp.git # timeout=10
+[2026-10-22T13:02:11.064Z] Fetching upstream changes from https://github.com/Adam-Blf/real-time-sales-devops-tp.git
+[2026-10-22T13:02:11.065Z]  > git --version # timeout=10
+[2026-10-22T13:02:11.071Z]  > git --version # 'git version 2.47.3'
+[2026-10-22T13:02:11.072Z]  > git fetch --tags --force --progress -- https://github.com/Adam-Blf/real-time-sales-devops-tp.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+[2026-10-22T13:02:11.575Z]  > git rev-parse refs/remotes/origin/dev^{commit} # timeout=10
+[2026-10-22T13:02:11.583Z] Checking out Revision 92766b9b270c97e87a349fd03371e627feb12dad (refs/remotes/origin/dev)
+[2026-10-22T13:02:11.584Z]  > git config core.sparsecheckout # timeout=10
+[2026-10-22T13:02:11.591Z]  > git checkout -f 92766b9b270c97e87a349fd03371e627feb12dad # timeout=10
+[2026-10-22T13:02:11.604Z] Commit message: "Secure Jenkins with a local admin and load CasC outside the home volume"
+[Pipeline] sh
+[2026-10-22T13:02:11.907Z] + git log -1 --oneline
+[2026-10-22T13:02:11.907Z] 92766b9 Secure Jenkins with a local admin and load CasC outside the home volume
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Install)
+[Pipeline] sh
+[2026-10-22T13:02:12.437Z] + python3 -m venv /var/jenkins_home/workspace/real-time-sales-pipeline/.venv
+[2026-10-22T13:02:15.668Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/pip install --quiet --upgrade pip
+[2026-10-22T13:02:16.219Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/pip install --quiet -r requirements-dev.txt
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Unit Tests)
+[Pipeline] sh
+[2026-10-22T13:02:17.175Z] + mkdir -p reports
+[2026-10-22T13:02:17.176Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python -m pytest tests/unit --junitxml=reports/unit.xml --cov=app --cov-report=term-missing --cov-report=xml:coverage.xml
+[2026-10-22T13:02:18.520Z] ============================= test session starts ==============================
+[2026-10-22T13:02:18.520Z] platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.7.0
+[2026-10-22T13:02:18.520Z] rootdir: /var/jenkins_home/workspace/real-time-sales-pipeline
+[2026-10-22T13:02:18.520Z] configfile: pytest.ini
+[2026-10-22T13:02:18.520Z] plugins: anyio-4.15.1, cov-6.0.0, timeout-2.3.1
+[2026-10-22T13:02:18.520Z] collected 50 items
+[2026-10-22T13:02:18.520Z] 
+[2026-10-22T13:02:18.520Z] tests/unit/test_api_routes.py ...........                                [ 22%]
+[2026-10-22T13:02:18.771Z] tests/unit/test_domain.py ..................................             [ 90%]
+[2026-10-22T13:02:18.771Z] tests/unit/test_messaging.py ..                                          [ 94%]
+[2026-10-22T13:02:18.771Z] tests/unit/test_polling.py ...                                           [100%]
+[2026-10-22T13:02:18.771Z] 
+[2026-10-22T13:02:18.771Z] =============================== warnings summary ===============================
+[2026-10-22T13:02:18.771Z] .venv/lib/python3.13/site-packages/starlette/testclient.py:40
+[2026-10-22T13:02:18.771Z]   /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/lib/python3.13/site-packages/starlette/testclient.py:40: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+[2026-10-22T13:02:18.771Z]     _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+[2026-10-22T13:02:18.771Z] 
+[2026-10-22T13:02:18.771Z] -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[2026-10-22T13:02:18.771Z] - generated xml file: /var/jenkins_home/workspace/real-time-sales-pipeline/reports/unit.xml -
+[2026-10-22T13:02:18.771Z] 
+[2026-10-22T13:02:18.771Z] ---------- coverage: platform linux, python 3.13.5-final-0 -----------
+[2026-10-22T13:02:18.771Z] Name               Stmts   Miss  Cover   Missing
+[2026-10-22T13:02:18.771Z] ------------------------------------------------
+[2026-10-22T13:02:18.771Z] app/__init__.py        0      0   100%
+[2026-10-22T13:02:18.771Z] app/domain.py         23      0   100%
+[2026-10-22T13:02:18.771Z] app/main.py           27      0   100%
+[2026-10-22T13:02:18.771Z] app/messaging.py      25      0   100%
+[2026-10-22T13:02:18.771Z] ------------------------------------------------
+[2026-10-22T13:02:18.771Z] TOTAL                 75      0   100%
+[2026-10-22T13:02:18.771Z] Coverage XML written to file coverage.xml
+[2026-10-22T13:02:18.771Z] 
+[2026-10-22T13:02:18.771Z] ======================== 50 passed, 1 warning in 1.41s =========================
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Integration Tests)
+[Pipeline] sh
+[2026-10-22T13:02:19.422Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python -m pytest tests/integration -v --junitxml=reports/integration.xml
+[2026-10-22T13:02:19.672Z] ============================= test session starts ==============================
+[2026-10-22T13:02:19.672Z] platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.7.0 -- /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python
+[2026-10-22T13:02:19.672Z] cachedir: .pytest_cache
+[2026-10-22T13:02:19.672Z] rootdir: /var/jenkins_home/workspace/real-time-sales-pipeline
+[2026-10-22T13:02:19.672Z] configfile: pytest.ini
+[2026-10-22T13:02:19.672Z] plugins: anyio-4.15.1, cov-6.0.0, timeout-2.3.1
+[2026-10-22T13:02:19.672Z] collecting ... collected 5 items
+[2026-10-22T13:02:19.672Z] 
+[2026-10-22T13:02:19.672Z] tests/integration/test_api_kafka.py::test_api_is_up PASSED               [ 20%]
+[2026-10-22T13:02:24.864Z] tests/integration/test_api_kafka.py::test_posted_order_is_published_to_kafka PASSED [ 40%]
+[2026-10-22T13:02:24.864Z] tests/integration/test_api_kafka.py::test_unknown_product_is_not_published PASSED [ 60%]
+[2026-10-22T13:02:25.115Z] tests/integration/test_spark_postgres.py::test_event_is_processed_into_processed_orders PASSED [ 80%]
+[2026-10-22T13:02:27.602Z] tests/integration/test_spark_postgres.py::test_invalid_event_is_filtered_out_by_spark PASSED [100%]
+[2026-10-22T13:02:27.602Z] 
+[2026-10-22T13:02:27.602Z] - generated xml file: /var/jenkins_home/workspace/real-time-sales-pipeline/reports/integration.xml -
+[2026-10-22T13:02:27.602Z] ============================== 5 passed in 7.77s ===============================
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] sh
+[2026-10-22T13:02:28.071Z] + docker compose -p real-time-sales-devops-tp build sales-api spark-streaming
+[2026-10-22T13:02:28.072Z] time="2026-10-22T13:02:27Z" level=warning msg="buildx Docker CLI plugin not found: falling back to the classic builder. BuildKit-only build features (multi-arch, secrets, ssh, additional contexts, ...) will not be available"
+[2026-10-22T13:02:28.072Z]  Image real-time-sales-devops-tp-sales-api Building 
+[2026-10-22T13:02:28.072Z]  Image real-time-sales-devops-tp-spark-streaming Building 
+[2026-10-22T13:02:28.072Z]  Image real-time-sales-devops-tp-sales-api Building 
+[2026-10-22T13:02:28.072Z]  Image real-time-sales-devops-tp-spark-streaming Building 
+[2026-10-22T13:02:28.072Z] Sending build context to Docker daemon  48.51kB[2026-10-22T13:02:28.072Z] 
+[2026-10-22T13:02:28.072Z] Sending build context to Docker daemon  48.51kB[2026-10-22T13:02:28.072Z] 
+[2026-10-22T13:02:28.072Z] Step 1/6 : FROM apache/spark:3.5.7
+[2026-10-22T13:02:28.323Z] Step 1/8 : FROM python:3.11-slim
+[2026-10-22T13:02:28.323Z]  ---> e88e9763f943
+[2026-10-22T13:02:28.323Z] Step 2/8 : WORKDIR /app
+[2026-10-22T13:02:28.323Z]  ---> 936ff39fd63e
+[2026-10-22T13:02:28.323Z] Step 2/6 : USER root
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> 1b386219fc62
+[2026-10-22T13:02:28.323Z] Step 3/8 : COPY requirements.txt .
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> 47351b54b671
+[2026-10-22T13:02:28.323Z] Step 3/6 : RUN pip install --no-cache-dir psycopg2-binary==2.9.9
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> c286cd5a385a
+[2026-10-22T13:02:28.323Z] Step 4/6 : COPY spark/sales_stream.py /opt/spark-app/sales_stream.py
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> 0ec4f4c85a28
+[2026-10-22T13:02:28.323Z] Step 4/8 : RUN pip install --no-cache-dir -r requirements.txt
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> 1099fb593ce9
+[2026-10-22T13:02:28.323Z] Step 5/8 : COPY app ./app
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> adac83e35c90
+[2026-10-22T13:02:28.323Z] Step 5/6 : WORKDIR /opt/spark-app
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> 53297268539a
+[2026-10-22T13:02:28.323Z] Step 6/8 : EXPOSE 8000
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> a9aebf6913aa
+[2026-10-22T13:02:28.323Z] Step 7/8 : CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> 50c415065231
+[2026-10-22T13:02:28.323Z] Step 6/6 : LABEL com.docker.compose.image.builder=classic
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> 33465ce392bd
+[2026-10-22T13:02:28.323Z]  ---> Using cache
+[2026-10-22T13:02:28.323Z]  ---> c9b2e59f0f65
+[2026-10-22T13:02:28.323Z] Step 8/8 : LABEL com.docker.compose.image.builder=classic
+[2026-10-22T13:02:28.324Z] Successfully built 33465ce392bd
+[2026-10-22T13:02:28.324Z]  ---> Using cache
+[2026-10-22T13:02:28.324Z]  ---> 4875042a5ee6
+[2026-10-22T13:02:28.599Z] Successfully tagged real-time-sales-devops-tp-spark-streaming:latest
+[2026-10-22T13:02:28.599Z]  Image real-time-sales-devops-tp-spark-streaming Built 
+[2026-10-22T13:02:28.599Z]  Image real-time-sales-devops-tp-spark-streaming Built 
+[2026-10-22T13:02:28.600Z] Successfully built 4875042a5ee6
+[2026-10-22T13:02:28.600Z] Successfully tagged real-time-sales-devops-tp-sales-api:latest
+[2026-10-22T13:02:28.600Z]  Image real-time-sales-devops-tp-sales-api Built 
+[2026-10-22T13:02:28.600Z]  Image real-time-sales-devops-tp-sales-api Built 
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] sh
+[2026-10-22T13:02:29.496Z] + docker compose -p real-time-sales-devops-tp up -d --no-deps sales-api spark-streaming
+[2026-10-22T13:02:30.052Z]  Container sales-spark-streaming Running 
+[2026-10-22T13:02:30.052Z]  Container sales-api Running 
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (E2E Tests)
+[Pipeline] sh
+[2026-10-22T13:02:30.746Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python -m pytest tests/e2e -v --junitxml=reports/e2e.xml
+[2026-10-22T13:02:30.997Z] ============================= test session starts ==============================
+[2026-10-22T13:02:30.997Z] platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.7.0 -- /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python
+[2026-10-22T13:02:30.997Z] cachedir: .pytest_cache
+[2026-10-22T13:02:30.997Z] rootdir: /var/jenkins_home/workspace/real-time-sales-pipeline
+[2026-10-22T13:02:30.997Z] configfile: pytest.ini
+[2026-10-22T13:02:30.997Z] plugins: anyio-4.15.1, cov-6.0.0, timeout-2.3.1
+[2026-10-22T13:02:31.248Z] collecting ... collected 1 item
+[2026-10-22T13:02:31.248Z] 
+[2026-10-22T13:02:32.593Z] tests/e2e/test_sales_pipeline.py::test_order_flows_from_api_to_postgres PASSED [100%]
+[2026-10-22T13:02:32.593Z] 
+[2026-10-22T13:02:32.593Z] - generated xml file: /var/jenkins_home/workspace/real-time-sales-pipeline/reports/e2e.xml -
+[2026-10-22T13:02:32.593Z] ============================== 1 passed in 1.29s ===============================
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (SonarQube Analysis)
+[Pipeline] withCredentials
+[2026-10-22T13:02:32.795Z] Masking supported pattern matches of $SONAR_TOKEN
+[Pipeline] {
+[Pipeline] sh
+[2026-10-22T13:02:33.130Z] + hostname
+[2026-10-22T13:02:33.130Z] + id -u
+[2026-10-22T13:02:33.130Z] + id -g
+[2026-10-22T13:02:33.130Z] + git rev-parse HEAD
+[2026-10-22T13:02:33.130Z] + docker run --rm --network real-time-sales-devops-tp_data-platform --volumes-from 5a1ec5b167b1 -w /var/jenkins_home/workspace/real-time-sales-pipeline -u 0:0 -e SONAR_TOKEN -e SONAR_HOST_URL sonarsource/sonar-scanner-cli:11 -Dsonar.projectBaseDir=/var/jenkins_home/workspace/real-time-sales-pipeline -Dsonar.scm.revision=92766b9b270c97e87a349fd03371e627feb12dad
+[2026-10-22T13:02:34.043Z] 13:02:33.935 INFO  Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
+[2026-10-22T13:02:34.043Z] 13:02:33.940 INFO  Project root configuration file: /var/jenkins_home/workspace/real-time-sales-pipeline/sonar-project.properties
+[2026-10-22T13:02:34.043Z] 13:02:33.963 INFO  SonarScanner CLI 7.3.0.5189
+[2026-10-22T13:02:34.043Z] 13:02:33.966 INFO  Linux 6.6.87.2-microsoft-standard-WSL2 amd64
+[2026-10-22T13:02:35.907Z] 13:02:35.850 INFO  Communicating with SonarQube Community Build 26.10.0.133078
+[2026-10-22T13:02:35.907Z] 13:02:35.852 INFO  JRE provisioning: os[linux], arch[x86_64]
+[2026-10-22T13:02:41.109Z] 13:02:40.148 INFO  Starting SonarScanner Engine...
+[2026-10-22T13:02:41.109Z] 13:02:40.150 INFO  Java 21.0.12.1 Eclipse Adoptium (64-bit)
+[2026-10-22T13:02:42.973Z] 13:02:42.599 INFO  Load global settings
+[2026-10-22T13:02:42.973Z] 13:02:42.817 INFO  Load global settings (done) | time=217ms
+[2026-10-22T13:02:42.973Z] 13:02:42.823 INFO  Server id: 1ACAD261-AaFUMjWTktDlJ6FV0Pf1
+[2026-10-22T13:02:42.973Z] 13:02:42.843 INFO  Loading required plugins
+[2026-10-22T13:02:42.973Z] 13:02:42.844 INFO  Load plugins index
+[2026-10-22T13:02:42.973Z] 13:02:42.877 INFO  Load plugins index (done) | time=32ms
+[2026-10-22T13:02:42.973Z] 13:02:42.879 INFO  Load/download plugins
+[2026-10-22T13:02:43.525Z] 13:02:43.522 INFO  Load/download plugins (done) | time=645ms
+[2026-10-22T13:02:44.437Z] 13:02:44.172 INFO  Load project settings for component key: 'real-time-sales-devops'
+[2026-10-22T13:02:44.437Z] 13:02:44.226 INFO  Load project settings for component key: 'real-time-sales-devops' (done) | time=53ms
+[2026-10-22T13:02:44.437Z] 13:02:44.255 INFO  Process project properties
+[2026-10-22T13:02:44.437Z] 13:02:44.285 INFO  Process project properties (done) | time=30ms
+[2026-10-22T13:02:44.437Z] 13:02:44.307 INFO  Project key: real-time-sales-devops
+[2026-10-22T13:02:44.437Z] 13:02:44.309 INFO  Base dir: /var/jenkins_home/workspace/real-time-sales-pipeline
+[2026-10-22T13:02:44.437Z] 13:02:44.309 INFO  Working dir: /tmp/.scannerwork
+[2026-10-22T13:02:44.688Z] 13:02:44.554 INFO  Load quality profiles
+[2026-10-22T13:02:44.689Z] 13:02:44.661 INFO  Load quality profiles (done) | time=103ms
+[2026-10-22T13:02:44.940Z] 13:02:44.720 INFO  Load active rules
+[2026-10-22T13:02:45.491Z] 13:02:45.260 INFO  Load active rules (done) | time=540ms
+[2026-10-22T13:02:45.492Z] 13:02:45.289 INFO  Load analysis cache
+[2026-10-22T13:02:45.492Z] 13:02:45.328 INFO  Load analysis cache | time=44ms
+[2026-10-22T13:02:45.743Z] 13:02:45.589 INFO  Preprocessing files...
+[2026-10-22T13:02:45.999Z] 13:02:45.835 INFO  1 language detected in 24 preprocessed files (done) | time=242ms
+[2026-10-22T13:02:46.000Z] 13:02:45.837 INFO  0 files ignored because of inclusion/exclusion patterns
+[2026-10-22T13:02:46.000Z] 13:02:45.838 INFO  2 directories skipped because of exclusion patterns (content not counted)
+[2026-10-22T13:02:46.000Z] 13:02:45.838 INFO  16 files ignored because of scm ignore settings
+[2026-10-22T13:02:46.000Z] 13:02:45.847 INFO  Loading plugins for detected languages
+[2026-10-22T13:02:46.000Z] 13:02:45.850 INFO  Load/download plugins
+[2026-10-22T13:02:46.251Z] 13:02:46.152 INFO  Load/download plugins (done) | time=307ms
+[2026-10-22T13:02:46.805Z] 13:02:46.520 INFO  Load project repositories
+[2026-10-22T13:02:46.805Z] 13:02:46.710 INFO  Load project repositories (done) | time=190ms
+[2026-10-22T13:02:46.805Z] 13:02:46.762 INFO  Indexing files...
+[2026-10-22T13:02:46.805Z] 13:02:46.763 INFO  Project configuration:
+[2026-10-22T13:02:46.805Z] 13:02:46.764 INFO    Excluded sources: **/__pycache__/**, **/.pytest_cache/**
+[2026-10-22T13:02:46.805Z] 13:02:46.765 INFO    Excluded sources for coverage: spark/**, tools/**
+[2026-10-22T13:02:46.805Z] 13:02:46.782 INFO  24 files indexed (done) | time=19ms
+[2026-10-22T13:02:46.805Z] 13:02:46.784 INFO  Quality profile for py: Sonar way core
+[2026-10-22T13:02:46.805Z] 13:02:46.785 INFO  ------------- Run sensors on module Real-Time Sales DevOps TP
+[2026-10-22T13:02:47.056Z] 13:02:46.876 INFO  Load metrics repository
+[2026-10-22T13:02:47.056Z] 13:02:46.921 INFO  Load metrics repository (done) | time=45ms
+[2026-10-22T13:02:48.401Z] 13:02:48.106 INFO  Sensor IaC YAML File Type Classification Sensor [iac]
+[2026-10-22T13:02:48.401Z] 13:02:48.113 INFO  Sensor IaC YAML File Type Classification Sensor [iac] (done) | time=7ms
+[2026-10-22T13:02:48.401Z] 13:02:48.114 INFO  Sensor IaC hadolint report Sensor [iac]
+[2026-10-22T13:02:48.401Z] 13:02:48.115 INFO  Sensor IaC hadolint report Sensor [iac] (done) | time=0ms
+[2026-10-22T13:02:48.401Z] 13:02:48.115 INFO  Sensor Java Config Sensor [iac]
+[2026-10-22T13:02:48.401Z] 13:02:48.115 INFO  There are no files to be analyzed for the Java language
+[2026-10-22T13:02:48.401Z] 13:02:48.116 INFO  Sensor Java Config Sensor [iac] (done) | time=0ms
+[2026-10-22T13:02:48.401Z] 13:02:48.117 INFO  Sensor IaC Docker Sensor [iac]
+[2026-10-22T13:02:48.401Z] 13:02:48.126 INFO  There are no files to be analyzed for the Docker language
+[2026-10-22T13:02:48.401Z] 13:02:48.126 INFO  Sensor IaC Docker Sensor [iac] (done) | time=10ms
+[2026-10-22T13:02:48.401Z] 13:02:48.127 INFO  Sensor Python Sensor [python]
+[2026-10-22T13:02:49.315Z] 13:02:49.066 INFO  Starting global symbols computation
+[2026-10-22T13:02:49.315Z] 13:02:49.072 INFO  24 source files to be analyzed
+[2026-10-22T13:02:51.174Z] 13:02:50.711 INFO  24/24 source files have been analyzed
+[2026-10-22T13:02:51.174Z] 13:02:50.713 INFO  Finished step global symbols computation in 1641ms
+[2026-10-22T13:02:51.174Z] 13:02:50.815 INFO  Starting rules execution
+[2026-10-22T13:02:51.174Z] 13:02:50.826 INFO  24 source files to be analyzed
+[2026-10-22T13:02:53.664Z] 13:02:53.056 INFO  24/24 source files have been analyzed
+[2026-10-22T13:02:53.664Z] 13:02:53.059 INFO  Finished step rules execution in 2242ms
+[2026-10-22T13:02:53.674Z] 13:02:53.064 INFO  The Python analyzer was able to leverage cached data from previous analyses for 0 out of 24 files. These files were not parsed.
+[2026-10-22T13:02:53.674Z] 13:02:53.076 INFO  Sensor Python Sensor [python] (done) | time=4948ms
+[2026-10-22T13:02:53.674Z] 13:02:53.078 INFO  Sensor Cobertura Sensor for Python coverage [python]
+[2026-10-22T13:02:53.674Z] 13:02:53.220 INFO  Python test coverage
+[2026-10-22T13:02:53.674Z] 13:02:53.226 INFO  Parsing report '/var/jenkins_home/workspace/real-time-sales-pipeline/coverage.xml'
+[2026-10-22T13:02:53.674Z] 13:02:53.368 INFO  Sensor Cobertura Sensor for Python coverage [python] (done) | time=292ms
+[2026-10-22T13:02:53.674Z] 13:02:53.369 INFO  Sensor PythonXUnitSensor [python]
+[2026-10-22T13:02:53.674Z] 13:02:53.474 INFO  Processing report '/var/jenkins_home/workspace/real-time-sales-pipeline/reports/unit.xml'
+[2026-10-22T13:02:53.674Z] 13:02:53.491 INFO  Sensor PythonXUnitSensor [python] (done) | time=122ms
+[2026-10-22T13:02:53.674Z] 13:02:53.492 INFO  Sensor Python Dependency Sensor [python]
+[2026-10-22T13:02:53.674Z] 13:02:53.505 INFO  Sensor Python Dependency Sensor [python] (done) | time=10ms
+[2026-10-22T13:02:53.674Z] 13:02:53.510 INFO  Sensor TextAndSecretsSensor [text]
+[2026-10-22T13:02:53.674Z] 13:02:53.555 INFO  Available processors: 8
+[2026-10-22T13:02:53.674Z] 13:02:53.564 INFO  Using 8 threads for analysis.
+[2026-10-22T13:02:55.021Z] 13:02:54.618 INFO  Start fetching files for the text and secrets analysis
+[2026-10-22T13:02:55.021Z] 13:02:54.646 INFO  Using Git CLI to retrieve dirty files
+[2026-10-22T13:02:55.021Z] 13:02:54.656 INFO  Retrieving language associated files and files included via "sonar.text.inclusions" that are tracked by git
+[2026-10-22T13:02:55.021Z] 13:02:54.666 INFO  Starting the text and secrets analysis
+[2026-10-22T13:02:55.021Z] 13:02:54.669 INFO  24 source files to be analyzed for the text and secrets analysis
+[2026-10-22T13:02:55.021Z] 13:02:54.764 INFO  24/24 source files have been analyzed for the text and secrets analysis
+[2026-10-22T13:02:55.021Z] 13:02:54.775 INFO  Sensor TextAndSecretsSensor [text] (done) | time=1270ms
+[2026-10-22T13:02:55.021Z] 13:02:54.781 INFO  ------------- Run sensors on project
+[2026-10-22T13:02:55.272Z] 13:02:55.039 INFO  Sensor IaC Project Sensor [iac]
+[2026-10-22T13:02:55.272Z] 13:02:55.042 INFO  Sensor IaC Project Sensor [iac] (done) | time=3ms
+[2026-10-22T13:02:55.272Z] 13:02:55.043 INFO  Sensor Zero Coverage Sensor
+[2026-10-22T13:02:55.272Z] 13:02:55.044 INFO  Sensor Zero Coverage Sensor (done) | time=0ms
+[2026-10-22T13:02:55.272Z] 13:02:55.044 INFO  ------------- Gather SCA dependencies on project
+[2026-10-22T13:02:55.272Z] 13:02:55.059 INFO  Dependency analysis skipped
+[2026-10-22T13:02:55.273Z] 13:02:55.081 INFO  CPD Executor 1 file had no CPD blocks
+[2026-10-22T13:02:55.273Z] 13:02:55.082 INFO  CPD Executor Calculating CPD for 7 files
+[2026-10-22T13:02:55.273Z] 13:02:55.095 INFO  CPD Executor CPD calculation finished (done) | time=13ms
+[2026-10-22T13:02:55.273Z] 13:02:55.104 INFO  SCM revision ID '92766b9b270c97e87a349fd03371e627feb12dad'
+[2026-10-22T13:02:55.524Z] 13:02:55.302 INFO  Analysis report generated in 186ms, dir size=236.2 kB
+[2026-10-22T13:02:55.524Z] 13:02:55.415 INFO  Analysis report compressed in 112ms, zip size=86.6 kB
+[2026-10-22T13:02:55.524Z] 13:02:55.492 INFO  Analysis report uploaded in 77ms
+[2026-10-22T13:02:55.524Z] 13:02:55.496 INFO  ANALYSIS SUCCESSFUL, you can find the results at: http://sonarqube:9000/dashboard?id=real-time-sales-devops
+[2026-10-22T13:02:55.524Z] 13:02:55.497 INFO  Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+[2026-10-22T13:02:55.524Z] 13:02:55.498 INFO  More about the report processing at http://sonarqube:9000/api/ce/task?id=89fae90e-cdcf-4245-ae60-1f8cea4da1ab
+[2026-10-22T13:02:55.775Z] 13:02:55.526 INFO  Analysis total time: 15.271 s
+[2026-10-22T13:02:55.775Z] 13:02:55.530 INFO  SonarScanner Engine completed successfully
+[2026-10-22T13:02:55.775Z] 13:02:55.632 INFO  EXECUTION SUCCESS
+[2026-10-22T13:02:55.775Z] 13:02:55.635 INFO  Total time: 21.704s
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Quality Gate)
+[Pipeline] withCredentials
+[2026-10-22T13:02:58.866Z] Masking supported pattern matches of $SONAR_TOKEN
+[Pipeline] {
+[Pipeline] sh
+[2026-10-22T13:02:59.278Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python tools/quality_gate.py .scannerwork/report-task.txt
+[2026-10-22T13:02:59.278Z] Traceback (most recent call last):
+[2026-10-22T13:02:59.278Z]   File "/var/jenkins_home/workspace/real-time-sales-pipeline/tools/quality_gate.py", line 52, in <module>
+[2026-10-22T13:02:59.278Z]     sys.exit(main(sys.argv[1] if len(sys.argv) > 1 else ".scannerwork/report-task.txt"))
+[2026-10-22T13:02:59.278Z]              ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026-10-22T13:02:59.278Z]   File "/var/jenkins_home/workspace/real-time-sales-pipeline/tools/quality_gate.py", line 33, in main
+[2026-10-22T13:02:59.278Z]     report = read_report_task(report_path)
+[2026-10-22T13:02:59.278Z]   File "/var/jenkins_home/workspace/real-time-sales-pipeline/tools/quality_gate.py", line 18, in read_report_task
+[2026-10-22T13:02:59.278Z]     with open(path, encoding="utf-8") as handle:
+[2026-10-22T13:02:59.278Z]          ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+[2026-10-22T13:02:59.278Z] FileNotFoundError: [Errno 2] No such file or directory: '.scannerwork/report-task.txt'
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] junit
+[2026-10-22T13:03:00.291Z] Recording test results
+[2026-10-22T13:03:00.358Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-10-22T13:03:00.462Z] Archiving artifacts
+[Pipeline] echo
+[2026-10-22T13:03:00.603Z] Pipeline STOP: a test level or the Quality Gate failed.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE
