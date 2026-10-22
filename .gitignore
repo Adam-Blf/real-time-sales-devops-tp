@@ -8,3 +8,8 @@ htmlcov/
 .vscode/
 .env
 logs/
+
+# CI artefacts
+coverage.xml
+.scannerwork/
+reports/
