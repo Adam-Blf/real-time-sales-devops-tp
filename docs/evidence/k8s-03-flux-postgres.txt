@@ -1,0 +1,6 @@
+$ kubectl -n sales exec deploy/postgres -- psql -U sales -d sales -c "select order_id, customer_id, product_id, quantity, unit_price, total_amount, processed_at from processed_orders where order_id='ORD-34A3DCF77E';"
+    order_id    | customer_id | product_id | quantity | unit_price | total_amount |         processed_at          
+----------------+-------------+------------+----------+------------+--------------+-------------------------------
+ ORD-34A3DCF77E | C100        | P001       |        3 |     100.00 |       300.00 | 2026-10-22 13:23:14.943646+00
+(1 row)
+

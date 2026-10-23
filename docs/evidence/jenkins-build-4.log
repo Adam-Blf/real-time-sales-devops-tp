@@ -1,0 +1,653 @@
+Started by an SCM change
+Obtained Jenkinsfile from git https://github.com/Adam-Blf/real-time-sales-devops-tp.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/real-time-sales-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/real-time-sales-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Adam-Blf/real-time-sales-devops-tp.git # timeout=10
+Fetching upstream changes from https://github.com/Adam-Blf/real-time-sales-devops-tp.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Adam-Blf/real-time-sales-devops-tp.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/dev^{commit} # timeout=10
+Checking out Revision eb549d03fc7885cc27f3ecb41d152029340ebf60 (refs/remotes/origin/dev)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f eb549d03fc7885cc27f3ecb41d152029340ebf60 # timeout=10
+Commit message: "Shorten commit hashes in Jenkins logs to avoid secret-scanner false positives"
+ > git rev-list --no-walk fa2a1761c50514d6ec4210df65fcddc85937805b # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-10-22T13:38:20.501Z] Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+[2026-10-22T13:38:21.286Z] Selected Git installation does not exist. Using Default
+[2026-10-22T13:38:21.286Z] The recommended git tool is: NONE
+[2026-10-22T13:38:21.286Z] No credentials specified
+[2026-10-22T13:38:21.286Z]  > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/real-time-sales-pipeline/.git # timeout=10
+[2026-10-22T13:38:21.293Z] Fetching changes from the remote Git repository
+[2026-10-22T13:38:21.297Z]  > git config remote.origin.url https://github.com/Adam-Blf/real-time-sales-devops-tp.git # timeout=10
+[2026-10-22T13:38:21.303Z] Fetching upstream changes from https://github.com/Adam-Blf/real-time-sales-devops-tp.git
+[2026-10-22T13:38:21.304Z]  > git --version # timeout=10
+[2026-10-22T13:38:21.310Z]  > git --version # 'git version 2.47.3'
+[2026-10-22T13:38:21.310Z]  > git fetch --tags --force --progress -- https://github.com/Adam-Blf/real-time-sales-devops-tp.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+[2026-10-22T13:38:21.929Z]  > git rev-parse refs/remotes/origin/dev^{commit} # timeout=10
+[2026-10-22T13:38:21.936Z] Checking out Revision eb549d03fc7885cc27f3ecb41d152029340ebf60 (refs/remotes/origin/dev)
+[2026-10-22T13:38:21.937Z]  > git config core.sparsecheckout # timeout=10
+[2026-10-22T13:38:21.943Z]  > git checkout -f eb549d03fc7885cc27f3ecb41d152029340ebf60 # timeout=10
+[2026-10-22T13:38:21.957Z] Commit message: "Shorten commit hashes in Jenkins logs to avoid secret-scanner false positives"
+[Pipeline] sh
+[2026-10-22T13:38:22.302Z] + git log -1 --oneline
+[2026-10-22T13:38:22.302Z] eb549d0 Shorten commit hashes in Jenkins logs to avoid secret-scanner false positives
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Install)
+[Pipeline] sh
+[2026-10-22T13:38:22.806Z] + python3 -m venv /var/jenkins_home/workspace/real-time-sales-pipeline/.venv
+[2026-10-22T13:38:26.938Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/pip install --quiet --upgrade pip
+[2026-10-22T13:38:27.851Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/pip install --quiet -r requirements-dev.txt
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Unit Tests)
+[Pipeline] sh
+[2026-10-22T13:38:30.391Z] + mkdir -p reports
+[2026-10-22T13:38:30.392Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python -m pytest tests/unit --junitxml=reports/unit.xml --cov=app --cov-report=term-missing --cov-report=xml:coverage.xml
+[2026-10-22T13:38:33.635Z] ============================= test session starts ==============================
+[2026-10-22T13:38:33.636Z] platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.7.0
+[2026-10-22T13:38:33.636Z] rootdir: /var/jenkins_home/workspace/real-time-sales-pipeline
+[2026-10-22T13:38:33.636Z] configfile: pytest.ini
+[2026-10-22T13:38:33.636Z] plugins: anyio-4.15.1, cov-6.0.0, timeout-2.3.1
+[2026-10-22T13:38:33.636Z] collected 50 items
+[2026-10-22T13:38:33.636Z] 
+[2026-10-22T13:38:34.140Z] tests/unit/test_api_routes.py ...........                                [ 22%]
+[2026-10-22T13:38:34.140Z] tests/unit/test_domain.py ..................................             [ 90%]
+[2026-10-22T13:38:34.140Z] tests/unit/test_messaging.py ..                                          [ 94%]
+[2026-10-22T13:38:34.391Z] tests/unit/test_polling.py ...                                           [100%]
+[2026-10-22T13:38:34.392Z] 
+[2026-10-22T13:38:34.392Z] =============================== warnings summary ===============================
+[2026-10-22T13:38:34.392Z] .venv/lib/python3.13/site-packages/starlette/testclient.py:40
+[2026-10-22T13:38:34.392Z]   /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/lib/python3.13/site-packages/starlette/testclient.py:40: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+[2026-10-22T13:38:34.392Z]     _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+[2026-10-22T13:38:34.392Z] 
+[2026-10-22T13:38:34.392Z] -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[2026-10-22T13:38:34.392Z] - generated xml file: /var/jenkins_home/workspace/real-time-sales-pipeline/reports/unit.xml -
+[2026-10-22T13:38:34.392Z] 
+[2026-10-22T13:38:34.392Z] ---------- coverage: platform linux, python 3.13.5-final-0 -----------
+[2026-10-22T13:38:34.392Z] Name               Stmts   Miss  Cover   Missing
+[2026-10-22T13:38:34.393Z] ------------------------------------------------
+[2026-10-22T13:38:34.393Z] app/__init__.py        0      0   100%
+[2026-10-22T13:38:34.393Z] app/domain.py         23      0   100%
+[2026-10-22T13:38:34.393Z] app/main.py           27      0   100%
+[2026-10-22T13:38:34.393Z] app/messaging.py      25      0   100%
+[2026-10-22T13:38:34.393Z] ------------------------------------------------
+[2026-10-22T13:38:34.393Z] TOTAL                 75      0   100%
+[2026-10-22T13:38:34.393Z] Coverage XML written to file coverage.xml
+[2026-10-22T13:38:34.393Z] 
+[2026-10-22T13:38:34.393Z] ======================== 50 passed, 1 warning in 3.13s =========================
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Integration Tests)
+[Pipeline] sh
+[2026-10-22T13:38:35.100Z] + /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python -m pytest tests/integration -v --junitxml=reports/integration.xml
+[2026-10-22T13:38:36.017Z] ============================= test session starts ==============================
+[2026-10-22T13:38:36.018Z] platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.7.0 -- /var/jenkins_home/workspace/real-time-sales-pipeline/.venv/bin/python
+[2026-10-22T13:38:36.018Z] cachedir: .pytest_cache
+[2026-10-22T13:38:36.018Z] rootdir: /var/jenkins_home/workspace/real-time-sales-pipeline
+[2026-10-22T13:38:36.018Z] configfile: pytest.ini
+[2026-10-22T13:38:36.018Z] plugins: anyio-4.15.1, cov-6.0.0, timeout-2.3.1
+[2026-10-22T13:38:36.018Z] collecting ... collected 5 items
+[2026-10-22T13:38:36.018Z] 
+[2026-10-22T13:38:40.147Z] tests/integration/test_api_kafka.py::test_api_is_up FAILED               [ 20%]
+[2026-10-22T13:38:44.275Z] tests/integration/test_api_kafka.py::test_posted_order_is_published_to_kafka ERROR [ 40%]
+[2026-10-22T13:38:48.403Z] tests/integration/test_api_kafka.py::test_unknown_product_is_not_published FAILED [ 60%]
+[2026-10-22T13:38:52.528Z] tests/integration/test_spark_postgres.py::test_event_is_processed_into_processed_orders FAILED [ 80%]
+[2026-10-22T13:38:56.656Z] tests/integration/test_spark_postgres.py::test_invalid_event_is_filtered_out_by_spark FAILED [100%]
+[2026-10-22T13:38:56.656Z] 
+[2026-10-22T13:38:56.656Z] ==================================== ERRORS ====================================
+[2026-10-22T13:38:56.656Z] __________ ERROR at setup of test_posted_order_is_published_to_kafka ___________
+[2026-10-22T13:38:56.656Z] 
+[2026-10-22T13:38:56.656Z]     @pytest.fixture
+[2026-10-22T13:38:56.656Z]     def consumer():
+[2026-10-22T13:38:56.656Z] >       kafka_consumer = topic_consumer()
+[2026-10-22T13:38:56.656Z] 
+[2026-10-22T13:38:56.656Z] tests/integration/test_api_kafka.py:15: 
+[2026-10-22T13:38:56.657Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.657Z] tests/support/platform.py:38: in topic_consumer
+[2026-10-22T13:38:56.657Z]     return KafkaConsumer(
+[2026-10-22T13:38:56.657Z] .venv/lib/python3.13/site-packages/kafka/consumer/group.py:358: in __init__
+[2026-10-22T13:38:56.657Z]     self._client = self.config['kafka_client'](metrics=self._metrics, **self.config)
+[2026-10-22T13:38:56.657Z] .venv/lib/python3.13/site-packages/kafka/client_async.py:240: in __init__
+[2026-10-22T13:38:56.657Z]     self.config['api_version'] = self.check_version()
+[2026-10-22T13:38:56.657Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.657Z] 
+[2026-10-22T13:38:56.657Z] self = <kafka.client_async.KafkaClient object at 0x7fdbc4f1ecf0>, node_id = None
+[2026-10-22T13:38:56.657Z] timeout = 2.0, strict = False
+[2026-10-22T13:38:56.657Z] 
+[2026-10-22T13:38:56.657Z]     def check_version(self, node_id=None, timeout=None, strict=False):
+[2026-10-22T13:38:56.657Z]         """Attempt to guess the version of a Kafka broker.
+[2026-10-22T13:38:56.657Z]     
+[2026-10-22T13:38:56.657Z]         Keyword Arguments:
+[2026-10-22T13:38:56.657Z]             node_id (str, optional): Broker node id from cluster metadata. If None, attempts
+[2026-10-22T13:38:56.657Z]                 to connect to any available broker until version is identified.
+[2026-10-22T13:38:56.657Z]                 Default: None
+[2026-10-22T13:38:56.657Z]             timeout (num, optional): Maximum time in seconds to try to check broker version.
+[2026-10-22T13:38:56.657Z]                 If unable to identify version before timeout, raise error (see below).
+[2026-10-22T13:38:56.658Z]                 Default: api_version_auto_timeout_ms / 1000
+[2026-10-22T13:38:56.658Z]     
+[2026-10-22T13:38:56.658Z]         Returns: version tuple, i.e. (0, 10), (0, 9), (0, 8, 2), ...
+[2026-10-22T13:38:56.658Z]     
+[2026-10-22T13:38:56.658Z]         Raises:
+[2026-10-22T13:38:56.658Z]             NodeNotReadyError (if node_id is provided)
+[2026-10-22T13:38:56.658Z]             NoBrokersAvailable (if node_id is None)
+[2026-10-22T13:38:56.658Z]             UnrecognizedBrokerVersion: please file bug if seen!
+[2026-10-22T13:38:56.658Z]             AssertionError (if strict=True): please file bug if seen!
+[2026-10-22T13:38:56.658Z]         """
+[2026-10-22T13:38:56.658Z]         timeout = timeout or (self.config['api_version_auto_timeout_ms'] / 1000)
+[2026-10-22T13:38:56.658Z]         self._lock.acquire()
+[2026-10-22T13:38:56.658Z]         end = time.time() + timeout
+[2026-10-22T13:38:56.658Z]         while time.time() < end:
+[2026-10-22T13:38:56.658Z]     
+[2026-10-22T13:38:56.658Z]             # It is possible that least_loaded_node falls back to bootstrap,
+[2026-10-22T13:38:56.658Z]             # which can block for an increasing backoff period
+[2026-10-22T13:38:56.658Z]             try_node = node_id or self.least_loaded_node()
+[2026-10-22T13:38:56.658Z]             if try_node is None:
+[2026-10-22T13:38:56.658Z]                 self._lock.release()
+[2026-10-22T13:38:56.658Z]                 raise Errors.NoBrokersAvailable()
+[2026-10-22T13:38:56.658Z]             if not self._init_connect(try_node):
+[2026-10-22T13:38:56.658Z]                 if try_node == node_id:
+[2026-10-22T13:38:56.658Z]                     raise Errors.NodeNotReadyError("Connection failed to %s" % node_id)
+[2026-10-22T13:38:56.659Z]                 else:
+[2026-10-22T13:38:56.659Z]                     continue
+[2026-10-22T13:38:56.659Z]     
+[2026-10-22T13:38:56.659Z]             conn = self._conns[try_node]
+[2026-10-22T13:38:56.659Z]     
+[2026-10-22T13:38:56.659Z]             # We will intentionally cause socket failures
+[2026-10-22T13:38:56.659Z]             # These should not trigger metadata refresh
+[2026-10-22T13:38:56.659Z]             self._refresh_on_disconnects = False
+[2026-10-22T13:38:56.659Z]             try:
+[2026-10-22T13:38:56.659Z]                 remaining = end - time.time()
+[2026-10-22T13:38:56.659Z]                 version = conn.check_version(timeout=remaining, strict=strict, topics=list(self.config['bootstrap_topics_filter']))
+[2026-10-22T13:38:56.659Z]                 if version >= (0, 10, 0):
+[2026-10-22T13:38:56.659Z]                     # cache the api versions map if it's available (starting
+[2026-10-22T13:38:56.659Z]                     # in 0.10 cluster version)
+[2026-10-22T13:38:56.659Z]                     self._api_versions = conn.get_api_versions()
+[2026-10-22T13:38:56.659Z]                 self._lock.release()
+[2026-10-22T13:38:56.659Z]                 return version
+[2026-10-22T13:38:56.659Z]             except Errors.NodeNotReadyError:
+[2026-10-22T13:38:56.659Z]                 # Only raise to user if this is a node-specific request
+[2026-10-22T13:38:56.659Z]                 if node_id is not None:
+[2026-10-22T13:38:56.659Z]                     self._lock.release()
+[2026-10-22T13:38:56.659Z]                     raise
+[2026-10-22T13:38:56.659Z]             finally:
+[2026-10-22T13:38:56.659Z]                 self._refresh_on_disconnects = True
+[2026-10-22T13:38:56.660Z]     
+[2026-10-22T13:38:56.660Z]         # Timeout
+[2026-10-22T13:38:56.660Z]         else:
+[2026-10-22T13:38:56.660Z]             self._lock.release()
+[2026-10-22T13:38:56.660Z] >           raise Errors.NoBrokersAvailable()
+[2026-10-22T13:38:56.660Z] E           kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2026-10-22T13:38:56.660Z] 
+[2026-10-22T13:38:56.660Z] .venv/lib/python3.13/site-packages/kafka/client_async.py:978: NoBrokersAvailable
+[2026-10-22T13:38:56.660Z] ------------------------------ Captured log setup ------------------------------
+[2026-10-22T13:38:56.660Z] WARNING  kafka.conn:conn.py:1542 DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2026-10-22T13:38:56.660Z] ERROR    kafka.conn:conn.py:315 DNS lookup failed for kafka:29092 (0)
+[2026-10-22T13:38:56.660Z] =================================== FAILURES ===================================
+[2026-10-22T13:38:56.660Z] ________________________________ test_api_is_up ________________________________
+[2026-10-22T13:38:56.660Z] 
+[2026-10-22T13:38:56.660Z]     @contextlib.contextmanager
+[2026-10-22T13:38:56.660Z]     def map_httpcore_exceptions() -> typing.Iterator[None]:
+[2026-10-22T13:38:56.660Z]         global HTTPCORE_EXC_MAP
+[2026-10-22T13:38:56.660Z]         if len(HTTPCORE_EXC_MAP) == 0:
+[2026-10-22T13:38:56.660Z]             HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+[2026-10-22T13:38:56.660Z]         try:
+[2026-10-22T13:38:56.660Z] >           yield
+[2026-10-22T13:38:56.660Z] 
+[2026-10-22T13:38:56.660Z] .venv/lib/python3.13/site-packages/httpx/_transports/default.py:101: 
+[2026-10-22T13:38:56.660Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.661Z] .venv/lib/python3.13/site-packages/httpx/_transports/default.py:250: in handle_request
+[2026-10-22T13:38:56.661Z]     resp = self._pool.handle_request(req)
+[2026-10-22T13:38:56.661Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+[2026-10-22T13:38:56.661Z]     raise exc from None
+[2026-10-22T13:38:56.661Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+[2026-10-22T13:38:56.661Z]     response = connection.handle_request(
+[2026-10-22T13:38:56.661Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection.py:101: in handle_request
+[2026-10-22T13:38:56.661Z]     raise exc
+[2026-10-22T13:38:56.661Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection.py:78: in handle_request
+[2026-10-22T13:38:56.661Z]     stream = self._connect(request)
+[2026-10-22T13:38:56.661Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection.py:124: in _connect
+[2026-10-22T13:38:56.661Z]     stream = self._network_backend.connect_tcp(**kwargs)
+[2026-10-22T13:38:56.661Z] .venv/lib/python3.13/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+[2026-10-22T13:38:56.661Z]     with map_exceptions(exc_map):
+[2026-10-22T13:38:56.661Z] /usr/lib/python3.13/contextlib.py:162: in __exit__
+[2026-10-22T13:38:56.661Z]     self.gen.throw(value)
+[2026-10-22T13:38:56.661Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.661Z] 
+[2026-10-22T13:38:56.661Z] map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>}
+[2026-10-22T13:38:56.661Z] 
+[2026-10-22T13:38:56.661Z]     @contextlib.contextmanager
+[2026-10-22T13:38:56.662Z]     def map_exceptions(map: ExceptionMapping) -> typing.Iterator[None]:
+[2026-10-22T13:38:56.662Z]         try:
+[2026-10-22T13:38:56.662Z]             yield
+[2026-10-22T13:38:56.662Z]         except Exception as exc:  # noqa: PIE786
+[2026-10-22T13:38:56.662Z]             for from_exc, to_exc in map.items():
+[2026-10-22T13:38:56.662Z]                 if isinstance(exc, from_exc):
+[2026-10-22T13:38:56.662Z] >                   raise to_exc(exc) from exc
+[2026-10-22T13:38:56.662Z] E                   httpcore.ConnectError: [Errno -2] Name or service not known
+[2026-10-22T13:38:56.662Z] 
+[2026-10-22T13:38:56.662Z] .venv/lib/python3.13/site-packages/httpcore/_exceptions.py:14: ConnectError
+[2026-10-22T13:38:56.662Z] 
+[2026-10-22T13:38:56.662Z] The above exception was the direct cause of the following exception:
+[2026-10-22T13:38:56.662Z] 
+[2026-10-22T13:38:56.662Z]     def test_api_is_up():
+[2026-10-22T13:38:56.662Z] >       response = httpx.get(f"{settings.API_URL}/api/health", timeout=5)
+[2026-10-22T13:38:56.662Z] 
+[2026-10-22T13:38:56.662Z] tests/integration/test_api_kafka.py:21: 
+[2026-10-22T13:38:56.662Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.665Z] .venv/lib/python3.13/site-packages/httpx/_api.py:195: in get
+[2026-10-22T13:38:56.665Z]     return request(
+[2026-10-22T13:38:56.665Z] .venv/lib/python3.13/site-packages/httpx/_api.py:109: in request
+[2026-10-22T13:38:56.665Z]     return client.request(
+[2026-10-22T13:38:56.665Z] .venv/lib/python3.13/site-packages/httpx/_client.py:825: in request
+[2026-10-22T13:38:56.665Z]     return self.send(request, auth=auth, follow_redirects=follow_redirects)
+[2026-10-22T13:38:56.665Z] .venv/lib/python3.13/site-packages/httpx/_client.py:914: in send
+[2026-10-22T13:38:56.665Z]     response = self._send_handling_auth(
+[2026-10-22T13:38:56.665Z] .venv/lib/python3.13/site-packages/httpx/_client.py:942: in _send_handling_auth
+[2026-10-22T13:38:56.665Z]     response = self._send_handling_redirects(
+[2026-10-22T13:38:56.665Z] .venv/lib/python3.13/site-packages/httpx/_client.py:979: in _send_handling_redirects
+[2026-10-22T13:38:56.665Z]     response = self._send_single_request(request)
+[2026-10-22T13:38:56.665Z] .venv/lib/python3.13/site-packages/httpx/_client.py:1014: in _send_single_request
+[2026-10-22T13:38:56.665Z]     response = transport.handle_request(request)
+[2026-10-22T13:38:56.665Z] .venv/lib/python3.13/site-packages/httpx/_transports/default.py:249: in handle_request
+[2026-10-22T13:38:56.665Z]     with map_httpcore_exceptions():
+[2026-10-22T13:38:56.665Z] /usr/lib/python3.13/contextlib.py:162: in __exit__
+[2026-10-22T13:38:56.665Z]     self.gen.throw(value)
+[2026-10-22T13:38:56.665Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.665Z] 
+[2026-10-22T13:38:56.665Z]     @contextlib.contextmanager
+[2026-10-22T13:38:56.666Z]     def map_httpcore_exceptions() -> typing.Iterator[None]:
+[2026-10-22T13:38:56.666Z]         global HTTPCORE_EXC_MAP
+[2026-10-22T13:38:56.666Z]         if len(HTTPCORE_EXC_MAP) == 0:
+[2026-10-22T13:38:56.666Z]             HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+[2026-10-22T13:38:56.666Z]         try:
+[2026-10-22T13:38:56.666Z]             yield
+[2026-10-22T13:38:56.666Z]         except Exception as exc:
+[2026-10-22T13:38:56.666Z]             mapped_exc = None
+[2026-10-22T13:38:56.666Z]     
+[2026-10-22T13:38:56.666Z]             for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+[2026-10-22T13:38:56.666Z]                 if not isinstance(exc, from_exc):
+[2026-10-22T13:38:56.666Z]                     continue
+[2026-10-22T13:38:56.666Z]                 # We want to map to the most specific exception we can find.
+[2026-10-22T13:38:56.666Z]                 # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+[2026-10-22T13:38:56.666Z]                 # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+[2026-10-22T13:38:56.666Z]                 if mapped_exc is None or issubclass(to_exc, mapped_exc):
+[2026-10-22T13:38:56.666Z]                     mapped_exc = to_exc
+[2026-10-22T13:38:56.666Z]     
+[2026-10-22T13:38:56.666Z]             if mapped_exc is None:  # pragma: no cover
+[2026-10-22T13:38:56.666Z]                 raise
+[2026-10-22T13:38:56.666Z]     
+[2026-10-22T13:38:56.666Z]             message = str(exc)
+[2026-10-22T13:38:56.666Z] >           raise mapped_exc(message) from exc
+[2026-10-22T13:38:56.666Z] E           httpx.ConnectError: [Errno -2] Name or service not known
+[2026-10-22T13:38:56.666Z] 
+[2026-10-22T13:38:56.668Z] .venv/lib/python3.13/site-packages/httpx/_transports/default.py:118: ConnectError
+[2026-10-22T13:38:56.668Z] ____________________ test_unknown_product_is_not_published _____________________
+[2026-10-22T13:38:56.668Z] 
+[2026-10-22T13:38:56.668Z]     @contextlib.contextmanager
+[2026-10-22T13:38:56.668Z]     def map_httpcore_exceptions() -> typing.Iterator[None]:
+[2026-10-22T13:38:56.668Z]         global HTTPCORE_EXC_MAP
+[2026-10-22T13:38:56.668Z]         if len(HTTPCORE_EXC_MAP) == 0:
+[2026-10-22T13:38:56.668Z]             HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+[2026-10-22T13:38:56.668Z]         try:
+[2026-10-22T13:38:56.668Z] >           yield
+[2026-10-22T13:38:56.668Z] 
+[2026-10-22T13:38:56.668Z] .venv/lib/python3.13/site-packages/httpx/_transports/default.py:101: 
+[2026-10-22T13:38:56.669Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.669Z] .venv/lib/python3.13/site-packages/httpx/_transports/default.py:250: in handle_request
+[2026-10-22T13:38:56.669Z]     resp = self._pool.handle_request(req)
+[2026-10-22T13:38:56.669Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+[2026-10-22T13:38:56.669Z]     raise exc from None
+[2026-10-22T13:38:56.669Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+[2026-10-22T13:38:56.669Z]     response = connection.handle_request(
+[2026-10-22T13:38:56.669Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection.py:101: in handle_request
+[2026-10-22T13:38:56.669Z]     raise exc
+[2026-10-22T13:38:56.669Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection.py:78: in handle_request
+[2026-10-22T13:38:56.669Z]     stream = self._connect(request)
+[2026-10-22T13:38:56.669Z] .venv/lib/python3.13/site-packages/httpcore/_sync/connection.py:124: in _connect
+[2026-10-22T13:38:56.669Z]     stream = self._network_backend.connect_tcp(**kwargs)
+[2026-10-22T13:38:56.669Z] .venv/lib/python3.13/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+[2026-10-22T13:38:56.669Z]     with map_exceptions(exc_map):
+[2026-10-22T13:38:56.669Z] /usr/lib/python3.13/contextlib.py:162: in __exit__
+[2026-10-22T13:38:56.669Z]     self.gen.throw(value)
+[2026-10-22T13:38:56.669Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.669Z] 
+[2026-10-22T13:38:56.669Z] map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>}
+[2026-10-22T13:38:56.669Z] 
+[2026-10-22T13:38:56.669Z]     @contextlib.contextmanager
+[2026-10-22T13:38:56.669Z]     def map_exceptions(map: ExceptionMapping) -> typing.Iterator[None]:
+[2026-10-22T13:38:56.669Z]         try:
+[2026-10-22T13:38:56.669Z]             yield
+[2026-10-22T13:38:56.669Z]         except Exception as exc:  # noqa: PIE786
+[2026-10-22T13:38:56.669Z]             for from_exc, to_exc in map.items():
+[2026-10-22T13:38:56.669Z]                 if isinstance(exc, from_exc):
+[2026-10-22T13:38:56.669Z] >                   raise to_exc(exc) from exc
+[2026-10-22T13:38:56.669Z] E                   httpcore.ConnectError: [Errno -5] No address associated with hostname
+[2026-10-22T13:38:56.669Z] 
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpcore/_exceptions.py:14: ConnectError
+[2026-10-22T13:38:56.670Z] 
+[2026-10-22T13:38:56.670Z] The above exception was the direct cause of the following exception:
+[2026-10-22T13:38:56.670Z] 
+[2026-10-22T13:38:56.670Z]     def test_unknown_product_is_not_published():
+[2026-10-22T13:38:56.670Z] >       response = httpx.post(f"{settings.API_URL}/api/orders", json={**ORDER, "product_id": "P999"}, timeout=15)
+[2026-10-22T13:38:56.670Z] 
+[2026-10-22T13:38:56.670Z] tests/integration/test_api_kafka.py:44: 
+[2026-10-22T13:38:56.670Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpx/_api.py:304: in post
+[2026-10-22T13:38:56.670Z]     return request(
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpx/_api.py:109: in request
+[2026-10-22T13:38:56.670Z]     return client.request(
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpx/_client.py:825: in request
+[2026-10-22T13:38:56.670Z]     return self.send(request, auth=auth, follow_redirects=follow_redirects)
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpx/_client.py:914: in send
+[2026-10-22T13:38:56.670Z]     response = self._send_handling_auth(
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpx/_client.py:942: in _send_handling_auth
+[2026-10-22T13:38:56.670Z]     response = self._send_handling_redirects(
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpx/_client.py:979: in _send_handling_redirects
+[2026-10-22T13:38:56.670Z]     response = self._send_single_request(request)
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpx/_client.py:1014: in _send_single_request
+[2026-10-22T13:38:56.670Z]     response = transport.handle_request(request)
+[2026-10-22T13:38:56.670Z] .venv/lib/python3.13/site-packages/httpx/_transports/default.py:249: in handle_request
+[2026-10-22T13:38:56.670Z]     with map_httpcore_exceptions():
+[2026-10-22T13:38:56.670Z] /usr/lib/python3.13/contextlib.py:162: in __exit__
+[2026-10-22T13:38:56.670Z]     self.gen.throw(value)
+[2026-10-22T13:38:56.670Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.670Z] 
+[2026-10-22T13:38:56.670Z]     @contextlib.contextmanager
+[2026-10-22T13:38:56.670Z]     def map_httpcore_exceptions() -> typing.Iterator[None]:
+[2026-10-22T13:38:56.670Z]         global HTTPCORE_EXC_MAP
+[2026-10-22T13:38:56.671Z]         if len(HTTPCORE_EXC_MAP) == 0:
+[2026-10-22T13:38:56.671Z]             HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+[2026-10-22T13:38:56.671Z]         try:
+[2026-10-22T13:38:56.671Z]             yield
+[2026-10-22T13:38:56.671Z]         except Exception as exc:
+[2026-10-22T13:38:56.671Z]             mapped_exc = None
+[2026-10-22T13:38:56.671Z]     
+[2026-10-22T13:38:56.671Z]             for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+[2026-10-22T13:38:56.671Z]                 if not isinstance(exc, from_exc):
+[2026-10-22T13:38:56.671Z]                     continue
+[2026-10-22T13:38:56.671Z]                 # We want to map to the most specific exception we can find.
+[2026-10-22T13:38:56.671Z]                 # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+[2026-10-22T13:38:56.671Z]                 # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+[2026-10-22T13:38:56.671Z]                 if mapped_exc is None or issubclass(to_exc, mapped_exc):
+[2026-10-22T13:38:56.671Z]                     mapped_exc = to_exc
+[2026-10-22T13:38:56.671Z]     
+[2026-10-22T13:38:56.671Z]             if mapped_exc is None:  # pragma: no cover
+[2026-10-22T13:38:56.671Z]                 raise
+[2026-10-22T13:38:56.671Z]     
+[2026-10-22T13:38:56.671Z]             message = str(exc)
+[2026-10-22T13:38:56.671Z] >           raise mapped_exc(message) from exc
+[2026-10-22T13:38:56.671Z] E           httpx.ConnectError: [Errno -5] No address associated with hostname
+[2026-10-22T13:38:56.671Z] 
+[2026-10-22T13:38:56.671Z] .venv/lib/python3.13/site-packages/httpx/_transports/default.py:118: ConnectError
+[2026-10-22T13:38:56.671Z] ________________ test_event_is_processed_into_processed_orders _________________
+[2026-10-22T13:38:56.671Z] 
+[2026-10-22T13:38:56.671Z]     def test_event_is_processed_into_processed_orders():
+[2026-10-22T13:38:56.671Z]         event = make_event()
+[2026-10-22T13:38:56.671Z] >       publish(event)
+[2026-10-22T13:38:56.671Z] 
+[2026-10-22T13:38:56.671Z] tests/integration/test_spark_postgres.py:38: 
+[2026-10-22T13:38:56.672Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.672Z] tests/integration/test_spark_postgres.py:27: in publish
+[2026-10-22T13:38:56.672Z]     producer = topic_producer()
+[2026-10-22T13:38:56.672Z] tests/support/platform.py:50: in topic_producer
+[2026-10-22T13:38:56.672Z]     return KafkaProducer(
+[2026-10-22T13:38:56.672Z] .venv/lib/python3.13/site-packages/kafka/producer/kafka.py:383: in __init__
+[2026-10-22T13:38:56.672Z]     client = self.config['kafka_client'](
+[2026-10-22T13:38:56.672Z] .venv/lib/python3.13/site-packages/kafka/client_async.py:240: in __init__
+[2026-10-22T13:38:56.672Z]     self.config['api_version'] = self.check_version()
+[2026-10-22T13:38:56.672Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.672Z] 
+[2026-10-22T13:38:56.672Z] self = <kafka.client_async.KafkaClient object at 0x7fdbc4f4ed50>, node_id = None
+[2026-10-22T13:38:56.672Z] timeout = 2.0, strict = False
+[2026-10-22T13:38:56.672Z] 
+[2026-10-22T13:38:56.672Z]     def check_version(self, node_id=None, timeout=None, strict=False):
+[2026-10-22T13:38:56.672Z]         """Attempt to guess the version of a Kafka broker.
+[2026-10-22T13:38:56.672Z]     
+[2026-10-22T13:38:56.672Z]         Keyword Arguments:
+[2026-10-22T13:38:56.672Z]             node_id (str, optional): Broker node id from cluster metadata. If None, attempts
+[2026-10-22T13:38:56.672Z]                 to connect to any available broker until version is identified.
+[2026-10-22T13:38:56.672Z]                 Default: None
+[2026-10-22T13:38:56.673Z]             timeout (num, optional): Maximum time in seconds to try to check broker version.
+[2026-10-22T13:38:56.673Z]                 If unable to identify version before timeout, raise error (see below).
+[2026-10-22T13:38:56.673Z]                 Default: api_version_auto_timeout_ms / 1000
+[2026-10-22T13:38:56.673Z]     
+[2026-10-22T13:38:56.673Z]         Returns: version tuple, i.e. (0, 10), (0, 9), (0, 8, 2), ...
+[2026-10-22T13:38:56.673Z]     
+[2026-10-22T13:38:56.673Z]         Raises:
+[2026-10-22T13:38:56.673Z]             NodeNotReadyError (if node_id is provided)
+[2026-10-22T13:38:56.673Z]             NoBrokersAvailable (if node_id is None)
+[2026-10-22T13:38:56.673Z]             UnrecognizedBrokerVersion: please file bug if seen!
+[2026-10-22T13:38:56.673Z]             AssertionError (if strict=True): please file bug if seen!
+[2026-10-22T13:38:56.673Z]         """
+[2026-10-22T13:38:56.673Z]         timeout = timeout or (self.config['api_version_auto_timeout_ms'] / 1000)
+[2026-10-22T13:38:56.673Z]         self._lock.acquire()
+[2026-10-22T13:38:56.673Z]         end = time.time() + timeout
+[2026-10-22T13:38:56.673Z]         while time.time() < end:
+[2026-10-22T13:38:56.673Z]     
+[2026-10-22T13:38:56.673Z]             # It is possible that least_loaded_node falls back to bootstrap,
+[2026-10-22T13:38:56.673Z]             # which can block for an increasing backoff period
+[2026-10-22T13:38:56.673Z]             try_node = node_id or self.least_loaded_node()
+[2026-10-22T13:38:56.673Z]             if try_node is None:
+[2026-10-22T13:38:56.673Z]                 self._lock.release()
+[2026-10-22T13:38:56.673Z]                 raise Errors.NoBrokersAvailable()
+[2026-10-22T13:38:56.673Z]             if not self._init_connect(try_node):
+[2026-10-22T13:38:56.673Z]                 if try_node == node_id:
+[2026-10-22T13:38:56.673Z]                     raise Errors.NodeNotReadyError("Connection failed to %s" % node_id)
+[2026-10-22T13:38:56.673Z]                 else:
+[2026-10-22T13:38:56.673Z]                     continue
+[2026-10-22T13:38:56.674Z]     
+[2026-10-22T13:38:56.674Z]             conn = self._conns[try_node]
+[2026-10-22T13:38:56.674Z]     
+[2026-10-22T13:38:56.674Z]             # We will intentionally cause socket failures
+[2026-10-22T13:38:56.674Z]             # These should not trigger metadata refresh
+[2026-10-22T13:38:56.674Z]             self._refresh_on_disconnects = False
+[2026-10-22T13:38:56.674Z]             try:
+[2026-10-22T13:38:56.674Z]                 remaining = end - time.time()
+[2026-10-22T13:38:56.674Z]                 version = conn.check_version(timeout=remaining, strict=strict, topics=list(self.config['bootstrap_topics_filter']))
+[2026-10-22T13:38:56.674Z]                 if version >= (0, 10, 0):
+[2026-10-22T13:38:56.674Z]                     # cache the api versions map if it's available (starting
+[2026-10-22T13:38:56.674Z]                     # in 0.10 cluster version)
+[2026-10-22T13:38:56.674Z]                     self._api_versions = conn.get_api_versions()
+[2026-10-22T13:38:56.674Z]                 self._lock.release()
+[2026-10-22T13:38:56.674Z]                 return version
+[2026-10-22T13:38:56.674Z]             except Errors.NodeNotReadyError:
+[2026-10-22T13:38:56.674Z]                 # Only raise to user if this is a node-specific request
+[2026-10-22T13:38:56.674Z]                 if node_id is not None:
+[2026-10-22T13:38:56.674Z]                     self._lock.release()
+[2026-10-22T13:38:56.674Z]                     raise
+[2026-10-22T13:38:56.674Z]             finally:
+[2026-10-22T13:38:56.674Z]                 self._refresh_on_disconnects = True
+[2026-10-22T13:38:56.674Z]     
+[2026-10-22T13:38:56.674Z]         # Timeout
+[2026-10-22T13:38:56.674Z]         else:
+[2026-10-22T13:38:56.674Z]             self._lock.release()
+[2026-10-22T13:38:56.674Z] >           raise Errors.NoBrokersAvailable()
+[2026-10-22T13:38:56.674Z] E           kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2026-10-22T13:38:56.674Z] 
+[2026-10-22T13:38:56.675Z] .venv/lib/python3.13/site-packages/kafka/client_async.py:978: NoBrokersAvailable
+[2026-10-22T13:38:56.675Z] ------------------------------ Captured log call -------------------------------
+[2026-10-22T13:38:56.675Z] WARNING  kafka.conn:conn.py:1542 DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2026-10-22T13:38:56.675Z] ERROR    kafka.conn:conn.py:315 DNS lookup failed for kafka:29092 (0)
+[2026-10-22T13:38:56.675Z] _________________ test_invalid_event_is_filtered_out_by_spark __________________
+[2026-10-22T13:38:56.675Z] 
+[2026-10-22T13:38:56.675Z]     def test_invalid_event_is_filtered_out_by_spark():
+[2026-10-22T13:38:56.675Z]         invalid = make_event(quantity=0, total_amount=0)
+[2026-10-22T13:38:56.675Z]         marker = make_event()
+[2026-10-22T13:38:56.675Z]         # Même partition : une fois le marqueur stocké, Spark a forcément déjà traité l'événement invalide.
+[2026-10-22T13:38:56.675Z] >       publish(invalid, marker)
+[2026-10-22T13:38:56.675Z] 
+[2026-10-22T13:38:56.675Z] tests/integration/test_spark_postgres.py:57: 
+[2026-10-22T13:38:56.675Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.675Z] tests/integration/test_spark_postgres.py:27: in publish
+[2026-10-22T13:38:56.675Z]     producer = topic_producer()
+[2026-10-22T13:38:56.675Z] tests/support/platform.py:50: in topic_producer
+[2026-10-22T13:38:56.675Z]     return KafkaProducer(
+[2026-10-22T13:38:56.675Z] .venv/lib/python3.13/site-packages/kafka/producer/kafka.py:383: in __init__
+[2026-10-22T13:38:56.675Z]     client = self.config['kafka_client'](
+[2026-10-22T13:38:56.675Z] .venv/lib/python3.13/site-packages/kafka/client_async.py:240: in __init__
+[2026-10-22T13:38:56.675Z]     self.config['api_version'] = self.check_version()
+[2026-10-22T13:38:56.675Z] _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+[2026-10-22T13:38:56.675Z] 
+[2026-10-22T13:38:56.675Z] self = <kafka.client_async.KafkaClient object at 0x7fdbc4f4f110>, node_id = None
+[2026-10-22T13:38:56.684Z] timeout = 2.0, strict = False
+[2026-10-22T13:38:56.684Z] 
+[2026-10-22T13:38:56.684Z]     def check_version(self, node_id=None, timeout=None, strict=False):
+[2026-10-22T13:38:56.684Z]         """Attempt to guess the version of a Kafka broker.
+[2026-10-22T13:38:56.684Z]     
+[2026-10-22T13:38:56.684Z]         Keyword Arguments:
+[2026-10-22T13:38:56.684Z]             node_id (str, optional): Broker node id from cluster metadata. If None, attempts
+[2026-10-22T13:38:56.684Z]                 to connect to any available broker until version is identified.
+[2026-10-22T13:38:56.685Z]                 Default: None
+[2026-10-22T13:38:56.685Z]             timeout (num, optional): Maximum time in seconds to try to check broker version.
+[2026-10-22T13:38:56.685Z]                 If unable to identify version before timeout, raise error (see below).
+[2026-10-22T13:38:56.685Z]                 Default: api_version_auto_timeout_ms / 1000
+[2026-10-22T13:38:56.685Z]     
+[2026-10-22T13:38:56.685Z]         Returns: version tuple, i.e. (0, 10), (0, 9), (0, 8, 2), ...
+[2026-10-22T13:38:56.685Z]     
+[2026-10-22T13:38:56.685Z]         Raises:
+[2026-10-22T13:38:56.685Z]             NodeNotReadyError (if node_id is provided)
+[2026-10-22T13:38:56.685Z]             NoBrokersAvailable (if node_id is None)
+[2026-10-22T13:38:56.685Z]             UnrecognizedBrokerVersion: please file bug if seen!
+[2026-10-22T13:38:56.685Z]             AssertionError (if strict=True): please file bug if seen!
+[2026-10-22T13:38:56.685Z]         """
+[2026-10-22T13:38:56.685Z]         timeout = timeout or (self.config['api_version_auto_timeout_ms'] / 1000)
+[2026-10-22T13:38:56.685Z]         self._lock.acquire()
+[2026-10-22T13:38:56.685Z]         end = time.time() + timeout
+[2026-10-22T13:38:56.685Z]         while time.time() < end:
+[2026-10-22T13:38:56.685Z]     
+[2026-10-22T13:38:56.685Z]             # It is possible that least_loaded_node falls back to bootstrap,
+[2026-10-22T13:38:56.685Z]             # which can block for an increasing backoff period
+[2026-10-22T13:38:56.685Z]             try_node = node_id or self.least_loaded_node()
+[2026-10-22T13:38:56.685Z]             if try_node is None:
+[2026-10-22T13:38:56.685Z]                 self._lock.release()
+[2026-10-22T13:38:56.685Z]                 raise Errors.NoBrokersAvailable()
+[2026-10-22T13:38:56.685Z]             if not self._init_connect(try_node):
+[2026-10-22T13:38:56.685Z]                 if try_node == node_id:
+[2026-10-22T13:38:56.685Z]                     raise Errors.NodeNotReadyError("Connection failed to %s" % node_id)
+[2026-10-22T13:38:56.685Z]                 else:
+[2026-10-22T13:38:56.685Z]                     continue
+[2026-10-22T13:38:56.685Z]     
+[2026-10-22T13:38:56.685Z]             conn = self._conns[try_node]
+[2026-10-22T13:38:56.685Z]     
+[2026-10-22T13:38:56.685Z]             # We will intentionally cause socket failures
+[2026-10-22T13:38:56.685Z]             # These should not trigger metadata refresh
+[2026-10-22T13:38:56.686Z]             self._refresh_on_disconnects = False
+[2026-10-22T13:38:56.686Z]             try:
+[2026-10-22T13:38:56.686Z]                 remaining = end - time.time()
+[2026-10-22T13:38:56.686Z]                 version = conn.check_version(timeout=remaining, strict=strict, topics=list(self.config['bootstrap_topics_filter']))
+[2026-10-22T13:38:56.686Z]                 if version >= (0, 10, 0):
+[2026-10-22T13:38:56.686Z]                     # cache the api versions map if it's available (starting
+[2026-10-22T13:38:56.686Z]                     # in 0.10 cluster version)
+[2026-10-22T13:38:56.686Z]                     self._api_versions = conn.get_api_versions()
+[2026-10-22T13:38:56.686Z]                 self._lock.release()
+[2026-10-22T13:38:56.686Z]                 return version
+[2026-10-22T13:38:56.686Z]             except Errors.NodeNotReadyError:
+[2026-10-22T13:38:56.686Z]                 # Only raise to user if this is a node-specific request
+[2026-10-22T13:38:56.686Z]                 if node_id is not None:
+[2026-10-22T13:38:56.686Z]                     self._lock.release()
+[2026-10-22T13:38:56.686Z]                     raise
+[2026-10-22T13:38:56.686Z]             finally:
+[2026-10-22T13:38:56.686Z]                 self._refresh_on_disconnects = True
+[2026-10-22T13:38:56.686Z]     
+[2026-10-22T13:38:56.686Z]         # Timeout
+[2026-10-22T13:38:56.686Z]         else:
+[2026-10-22T13:38:56.686Z]             self._lock.release()
+[2026-10-22T13:38:56.686Z] >           raise Errors.NoBrokersAvailable()
+[2026-10-22T13:38:56.686Z] E           kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2026-10-22T13:38:56.686Z] 
+[2026-10-22T13:38:56.686Z] .venv/lib/python3.13/site-packages/kafka/client_async.py:978: NoBrokersAvailable
+[2026-10-22T13:38:56.687Z] ------------------------------ Captured log call -------------------------------
+[2026-10-22T13:38:56.687Z] WARNING  kafka.conn:conn.py:1542 DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2026-10-22T13:38:56.687Z] ERROR    kafka.conn:conn.py:315 DNS lookup failed for kafka:29092 (0)
+[2026-10-22T13:38:56.687Z] - generated xml file: /var/jenkins_home/workspace/real-time-sales-pipeline/reports/integration.xml -
+[2026-10-22T13:38:56.687Z] =========================== short test summary info ============================
+[2026-10-22T13:38:56.687Z] FAILED tests/integration/test_api_kafka.py::test_api_is_up - httpx.ConnectError: [Errno -2] Name or service not known
+[2026-10-22T13:38:56.687Z] FAILED tests/integration/test_api_kafka.py::test_unknown_product_is_not_published - httpx.ConnectError: [Errno -5] No address associated with hostname
+[2026-10-22T13:38:56.687Z] FAILED tests/integration/test_spark_postgres.py::test_event_is_processed_into_processed_orders - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2026-10-22T13:38:56.687Z] FAILED tests/integration/test_spark_postgres.py::test_invalid_event_is_filtered_out_by_spark - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2026-10-22T13:38:56.687Z] ERROR tests/integration/test_api_kafka.py::test_posted_order_is_published_to_kafka - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2026-10-22T13:38:56.687Z] ========================= 4 failed, 1 error in 20.25s ==========================
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+Stage "Build" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+Stage "Deploy" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (E2E Tests)
+Stage "E2E Tests" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (SonarQube Analysis)
+Stage "SonarQube Analysis" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Quality Gate)
+Stage "Quality Gate" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] junit
+[2026-10-22T13:38:59.392Z] Recording test results
+[2026-10-22T13:38:59.485Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-10-22T13:38:59.564Z] Archiving artifacts
+[Pipeline] echo
+[2026-10-22T13:38:59.651Z] Pipeline STOP: a test level or the Quality Gate failed.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE

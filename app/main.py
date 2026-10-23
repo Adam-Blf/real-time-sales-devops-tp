@@ -1,60 +1,26 @@
-import json
-import os
-import uuid
-from datetime import datetime, timezone
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
-from kafka import KafkaProducer
-from pydantic import BaseModel, Field
+from kafka.errors import KafkaError
+
+from app import messaging
+from app.domain import PRODUCTS, Order, OrderEvent, build_order_event, is_known_product
+
+__all__ = ["app", "Order", "OrderEvent", "build_order_event"]
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    yield
+    messaging.close_producer()
+
 
 app = FastAPI(
     title="Real-Time Sales API",
     version="1.0.0",
-    description="API pédagogique de génération d'événements de ventes."
+    description="API pédagogique de génération d'événements de ventes.",
+    lifespan=lifespan,
 )
-
-KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
-KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "sales.orders")
-
-PRODUCTS = [
-    {"product_id": "P001", "name": "Laptop Pro", "category": "Computers", "price": 1299.90},
-    {"product_id": "P002", "name": "Keyboard", "category": "Accessories", "price": 89.90},
-    {"product_id": "P003", "name": "Mouse", "category": "Accessories", "price": 49.90},
-    {"product_id": "P004", "name": "Monitor 27", "category": "Screens", "price": 399.90},
-]
-
-
-class Order(BaseModel):
-    customer_id: str = Field(min_length=2)
-    product_id: str = Field(min_length=2)
-    quantity: int = Field(gt=0, le=1000)
-    unit_price: float = Field(gt=0, le=100000)
-
-
-class OrderEvent(Order):
-    order_id: str
-    total_amount: float
-    timestamp: str
-
-
-def build_order_event(order: Order) -> dict:
-    return {
-        "order_id": f"ORD-{uuid.uuid4().hex[:10].upper()}",
-        "customer_id": order.customer_id,
-        "product_id": order.product_id,
-        "quantity": order.quantity,
-        "unit_price": order.unit_price,
-        "total_amount": round(order.quantity * order.unit_price, 2),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    }
-
-
-def create_kafka_producer():
-    return KafkaProducer(
-        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-        value_serializer=lambda value: json.dumps(value).encode("utf-8"),
-        retries=5,
-    )
 
 
 @app.get("/api/health")
@@ -69,16 +35,13 @@ def products():
 
 @app.post("/api/orders", response_model=OrderEvent, status_code=201)
 def create_order(order: Order):
-    if not any(p["product_id"] == order.product_id for p in PRODUCTS):
+    if not is_known_product(order.product_id):
         raise HTTPException(status_code=404, detail="Unknown product")
 
     event = build_order_event(order)
-
-    producer = create_kafka_producer()
     try:
-        producer.send(KAFKA_TOPIC, value=event).get(timeout=10)
-        producer.flush()
-    finally:
-        producer.close()
+        messaging.publish_order_event(event)
+    except KafkaError as error:
+        raise HTTPException(status_code=503, detail="Event bus unavailable") from error
 
     return event

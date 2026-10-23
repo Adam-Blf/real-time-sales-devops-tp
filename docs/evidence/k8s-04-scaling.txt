@@ -1,0 +1,20 @@
+$ kubectl -n sales scale deployment/sales-api --replicas=3
+deployment.apps/sales-api scaled
+Waiting for deployment "sales-api" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "sales-api" rollout to finish: 2 of 3 updated replicas are available...
+deployment "sales-api" successfully rolled out
+
+$ kubectl -n sales get pods -l app=sales-api -o wide
+NAME                        READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
+sales-api-b5db74958-7lwq5   1/1     Running   0          7s      10.244.0.17   minikube   <none>           <none>
+sales-api-b5db74958-8lqzt   1/1     Running   0          8m59s   10.244.0.10   minikube   <none>           <none>
+sales-api-b5db74958-t9cpb   1/1     Running   0          7s      10.244.0.18   minikube   <none>           <none>
+
+$ kubectl -n sales get deployment sales-api
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+sales-api   3/3     3            3           8m59s
+
+$ kubectl -n sales scale deployment/sales-api --replicas=1
+deployment.apps/sales-api scaled
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+sales-api   1/1     1            1           9m20s

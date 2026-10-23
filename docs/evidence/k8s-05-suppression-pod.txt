@@ -1,0 +1,31 @@
+$ kubectl -n sales get pods -l app=sales-api
+NAME                        READY   STATUS    RESTARTS   AGE
+sales-api-b5db74958-8lqzt   1/1     Running   0          9m38s
+
+$ kubectl -n sales delete pod sales-api-b5db74958-8lqzt
+pod "sales-api-b5db74958-8lqzt" deleted from sales namespace
+
+$ kubectl -n sales get pods -l app=sales-api -w   (événements observés)
+EVENT      NAME                        READY   STATUS    RESTARTS   AGE
+ADDED      sales-api-b5db74958-8lqzt   1/1     Running   0          9m38s
+MODIFIED   sales-api-b5db74958-8lqzt   1/1     Terminating   0          9m39s
+MODIFIED   sales-api-b5db74958-8lqzt   1/1     Terminating   0          9m39s
+ADDED      sales-api-b5db74958-g4j5d   0/1     Pending       0          0s
+MODIFIED   sales-api-b5db74958-g4j5d   0/1     Pending       0          0s
+MODIFIED   sales-api-b5db74958-g4j5d   0/1     ContainerCreating   0          0s
+MODIFIED   sales-api-b5db74958-g4j5d   0/1     ContainerCreating   0          1s
+MODIFIED   sales-api-b5db74958-8lqzt   0/1     Completed           0          9m40s
+MODIFIED   sales-api-b5db74958-8lqzt   0/1     Completed           0          9m40s
+DELETED    sales-api-b5db74958-8lqzt   0/1     Completed           0          9m40s
+MODIFIED   sales-api-b5db74958-g4j5d   0/1     Running             0          1s
+MODIFIED   sales-api-b5db74958-g4j5d   1/1     Running             0          7s
+MODIFIED   sales-api-b5db74958-g4j5d   1/1     Running             0          7s
+
+$ kubectl -n sales get pods -l app=sales-api
+NAME                        READY   STATUS    RESTARTS   AGE
+sales-api-b5db74958-g4j5d   1/1     Running   0          27s
+
+$ kubectl -n sales get events --field-selector involvedObject.kind=ReplicaSet --sort-by=.lastTimestamp | tail -3
+66s         Normal   SuccessfulDelete   replicaset/sales-api-b5db74958          Deleted pod: sales-api-b5db74958-t9cpb
+66s         Normal   SuccessfulDelete   replicaset/sales-api-b5db74958          Deleted pod: sales-api-b5db74958-7lwq5
+27s         Normal   SuccessfulCreate   replicaset/sales-api-b5db74958          Created pod: sales-api-b5db74958-g4j5d

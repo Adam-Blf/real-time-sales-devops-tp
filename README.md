@@ -43,6 +43,13 @@ Projet fil rouge : industrialiser une pipeline Big Data de ventes temps réel av
      GitLab --> Jenkins --> Tests --> SonarQube --> Quality Gate
 ```
 
+## Travail réalisé (fork Adam Beloucif)
+
+- Rapport PDF des deux TP : [docs/Rapport TP DevOps et Kubernetes - Adam Beloucif.pdf](<docs/Rapport TP DevOps et Kubernetes - Adam Beloucif.pdf>), régénérable avec `python docs/rapport/build.py`
+- Rapport du TP CI/CD : [docs/report.md](docs/report.md) (tests, Jenkins, SonarQube, Quality Gate, résultats avant/après)
+- Déploiement Kubernetes local : [docs/kubernetes.md](docs/kubernetes.md) et manifestes dans [k8s/](k8s/)
+- Preuves brutes (sorties Jenkins, SonarQube, kubectl) : [docs/evidence/](docs/evidence/)
+
 ## 1. Prérequis étudiant
 
 - Git

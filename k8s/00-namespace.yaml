@@ -1,0 +1,5 @@
+# Namespace dédié : isole la plateforme des autres déploiements du cluster Minikube.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sales

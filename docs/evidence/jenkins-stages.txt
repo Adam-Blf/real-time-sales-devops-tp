@@ -1,0 +1,17 @@
+{ (Declarative: Checkout SCM)
+{ (Checkout)
+{ (Install)
+{ (Unit Tests)
+======================== 50 passed, 1 warning in 1.38s =========================
+{ (Integration Tests)
+============================== 5 passed in 7.88s ===============================
+{ (Build)
+{ (Deploy)
+{ (E2E Tests)
+============================== 1 passed in 1.36s ===============================
+{ (SonarQube Analysis)
+{ (Quality Gate)
+Quality Gate: OK
+{ (Declarative: Post Actions)
+Pipeline OK: tests green and Quality Gate passed.
+Finished: SUCCESS

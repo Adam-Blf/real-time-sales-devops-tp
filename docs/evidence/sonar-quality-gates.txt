@@ -1,0 +1,10 @@
+real-time-sales-devops Quality Gate OK
+  [OK] coverage (seuil LT 80, mesuré 100.0)
+  [OK] duplicated_lines_density (seuil GT 3, mesuré 0.0)
+  [OK] bugs (seuil GT 0, mesuré 0)
+  [OK] vulnerabilities (seuil GT 0, mesuré 0)
+real-time-sales-devops-baseline Quality Gate ERROR
+  [ERROR] coverage (seuil LT 80, mesuré 70.7)
+  [OK] duplicated_lines_density (seuil GT 3, mesuré 0.0)
+  [OK] bugs (seuil GT 0, mesuré 0)
+  [ERROR] vulnerabilities (seuil GT 0, mesuré 1)
