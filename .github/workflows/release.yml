@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check tag matches VERSION
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          SRC="$(tr -d '[:space:]' < VERSION)"
+          if [ "$TAG" != "$SRC" ]; then
+            echo "::error::tag v$TAG does not match VERSION $SRC"
+            exit 1
+          fi
+          echo "VERSION=$SRC" >> "$GITHUB_ENV"
+
+      - name: Extract CHANGELOG section
+        run: |
+          awk -v v="$VERSION" '
+            /^## / {
+              if (found) exit
+              line = $0
+              sub(/^## \[?/, "", line)
+              split(line, parts, /[] ]/)
+              if (parts[1] == v) { found = 1; next }
+            }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::no CHANGELOG section for $VERSION"
+            exit 1
+          fi
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp "docs/Rapport TP DevOps et Kubernetes - Adam Beloucif.pdf" "rapport-tp-devops-kubernetes-v$VERSION.pdf"
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file release-notes.md \
+            "rapport-tp-devops-kubernetes-v$VERSION.pdf"
